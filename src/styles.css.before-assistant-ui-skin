@@ -1,0 +1,430 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+:root{
+  --lavender:#b99aff;
+}
+
+*{box-sizing:border-box}
+
+html,body,#root{
+  width:100%;
+  height:100%;
+  margin:0;
+}
+
+body{
+  overflow:hidden;
+  background:#090909;
+  color:#fff;
+  font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.scout-page{
+  position:relative;
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
+  background:#090909;
+}
+
+.scout-bg-video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+
+.scout-video-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.22) 45%,rgba(0,0,0,.78));
+}
+
+.scout-brand{
+  position:absolute;
+  z-index:5;
+  left:5vw;
+  top:28px;
+  color:#fff;
+  font-size:25px;
+  line-height:1;
+  font-weight:400;
+  letter-spacing:.16em;
+}
+
+.scout-main{
+  position:absolute;
+  inset:0;
+  z-index:5;
+}
+
+.scout-hero{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(900px,92vw);
+  transform:translate(-50%,-38%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+}
+
+.scout-intro{
+  width:100%;
+  text-align:center;
+}
+
+.scout-intro h1{
+  margin:0;
+  font-size:clamp(44px,5.2vw,68px);
+  line-height:1.02;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+
+.scout-intro p{
+  margin:12px auto 0;
+  max-width:760px;
+  color:rgba(255,255,255,.88);
+  font-size:19px;
+  line-height:1.42;
+}
+
+/* EMPTY STATE: a real assistant-ui ComposerPrimitive, floating directly
+   over the background. There is no Thread or scroll container here. */
+.scout-empty-composer{
+  width:min(710px,92vw);
+}
+
+.scout-composer{
+  width:100%;
+  min-height:80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+  padding:9px 12px;
+  border:1px solid rgba(255,255,255,.30);
+  border-radius:16px;
+  background:rgba(15,15,15,.76);
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+
+.scout-composer-input{
+  width:100%;
+  min-height:40px;
+  max-height:160px;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  font:inherit;
+  font-size:15px;
+  line-height:24px;
+  padding:6px 8px;
+  caret-color:#fff;
+}
+
+.scout-composer-input::placeholder{
+  color:rgba(255,255,255,.55);
+}
+
+.scout-composer-actions{
+  min-height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.scout-composer-plus{
+  width:32px;
+  height:32px;
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.78);
+  font-size:26px;
+  font-weight:300;
+  line-height:1;
+  cursor:pointer;
+}
+
+.scout-composer-send{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  border:0;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--lavender);
+  color:#fff;
+  cursor:pointer;
+  box-shadow:none;
+}
+
+/* ACTIVE STATE: now and only now do we mount ThreadPrimitive. */
+.scout-active-thread{
+  width:min(710px,92vw);
+  height:min(620px,calc(100dvh - 190px));
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.30);
+  border-radius:18px;
+  background:rgba(15,15,15,.76);
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  position:relative;
+}
+
+.scout-thread-root{
+  width:100%;
+  height:100%;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  background:transparent !important;
+}
+
+.scout-thread-viewport{
+  width:100%;
+  height:100%;
+  min-height:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.16) transparent;
+  background:transparent !important;
+  padding-bottom:0;
+}
+
+.scout-thread-viewport::-webkit-scrollbar{width:7px}
+.scout-thread-viewport::-webkit-scrollbar-track{background:transparent}
+.scout-thread-viewport::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.16);
+  border-radius:999px;
+}
+
+.scout-thread-viewport > *{
+  width:100%;
+}
+
+.scout-thread-footer{
+  position:sticky;
+  bottom:0;
+  z-index:10;
+  margin-top:auto;
+  padding:10px 12px 10px;
+  background:linear-gradient(
+    to bottom,
+    rgba(15,15,15,0),
+    rgba(15,15,15,.64) 34%,
+    rgba(15,15,15,.88) 100%
+  ) !important;
+}
+
+.scout-thread-footer .scout-composer{
+  min-height:62px;
+  padding:5px 6px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+/* Message content is provided by the installed assistant-ui component
+   implementation; we only remove an unwanted full-width background. */
+.scout-thread-root .aui-message-group{
+  background:transparent;
+}
+
+@media(max-width:620px){
+  .scout-brand{
+    left:24px;
+    top:20px;
+    font-size:24px;
+  }
+
+  .scout-hero{
+    width:94vw;
+    transform:translate(-50%,-40%);
+    gap:18px;
+  }
+
+  .scout-intro p{
+    font-size:17px;
+    margin-top:10px;
+  }
+
+  .scout-empty-composer,
+  .scout-active-thread{
+    width:100%;
+  }
+
+  .scout-composer{
+    min-height:78px;
+  }
+
+  .scout-active-thread{
+    height:min(560px,calc(100dvh - 170px));
+  }
+}
+
+.scout-composer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.035) 0%,
+    rgba(255,255,255,0) 38%
+  );
+}
+
+
+/* SCOUT thinking state.
+   Three softly pulsing signals give the "thinking" state a tactile/haptic feel
+   without pretending that the browser is producing physical haptics. */
+.scout-thinking{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 6px 5px;
+  min-height:22px;
+  color:rgba(255,255,255,.58);
+  font-size:13px;
+  line-height:18px;
+  letter-spacing:.01em;
+}
+
+.scout-thinking-label{
+  white-space:nowrap;
+}
+
+.scout-thinking-signal{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  height:18px;
+}
+
+.scout-thinking-signal i{
+  display:block;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  animation:scout-thinking-pulse 1.15s ease-in-out infinite;
+  transform:scale(.7);
+  opacity:.42;
+}
+
+.scout-thinking-signal i:nth-child(2){
+  animation-delay:.16s;
+}
+
+.scout-thinking-signal i:nth-child(3){
+  animation-delay:.32s;
+}
+
+@keyframes scout-thinking-pulse{
+  0%,100%{
+    transform:scale(.65);
+    opacity:.35;
+  }
+  45%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .scout-thinking-signal i{
+    animation:none;
+    transform:scale(1);
+    opacity:.65;
+  }
+}
+
+/* SCOUT conversation treatment: the messages live inside the same glass surface. */
+.scout-active-thread [data-slot="aui_user-message-root"]{
+  padding-left:8px !important;
+  padding-right:8px !important;
+}
+
+.scout-active-thread .aui-user-message-content{
+  background:rgba(185,154,255,.22) !important;
+  border:1px solid rgba(185,154,255,.45);
+  color:#fff !important;
+  border-radius:14px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.scout-active-thread [data-slot="aui_assistant-message-content"]{
+  width:fit-content;
+  max-width:min(90%,620px);
+  padding:10px 14px !important;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:13px;
+  background:rgba(255,255,255,.09);
+  color:rgba(255,255,255,.92) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.scout-active-thread [data-slot="aui_assistant-message-footer"]{
+  padding-left:8px;
+}
+
+.scout-active-thread .scout-thread-viewport > div{
+  padding-top:14px !important;
+}
+
+.scout-active-thread .scout-composer::before{
+  display:none;
+}
+
+/* The generated assistant-ui streaming dot is intentionally hidden.
+   SCOUT uses its own "SCOUT is thinking" status immediately above the composer. */
+.scout-active-thread [data-slot="aui_assistant-message-indicator"]{
+  display:none !important;
+}
+
+/* Keep the conversation open and spacious while the composer remains visually
+   integrated into the bottom of the same glass surface. */
+.scout-active-thread .scout-thread-viewport > div{
+  padding-left:14px !important;
+  padding-right:14px !important;
+  padding-top:10px !important;
+}
+
+.scout-active-thread .scout-thread-footer{
+  padding-left:4px;
+  padding-right:4px;
+}
+
+/* SCOUT intentionally omits assistant-ui's optional ScrollToBottom button.
+   The conversation surface remains scrollable without a floating control. */
+.scout-active-thread .aui-thread-scroll-to-bottom{
+  display:none !important;
+}

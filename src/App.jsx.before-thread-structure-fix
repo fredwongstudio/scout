@@ -1,0 +1,177 @@
+import { useState } from "react";
+
+import {
+  AssistantRuntimeProvider,
+  AuiIf,
+  ComposerPrimitive,
+  ThreadPrimitive,
+  useAuiState,
+} from "@assistant-ui/react";
+import { ArrowUpIcon, SquareIcon } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThreadMessage } from "@/components/assistant-ui/thread";
+import { useScoutRuntime } from "./runtime";
+import "./styles.css";
+
+function ScoutComposer() {
+  return (
+    <ComposerPrimitive.Root className="scout-composer">
+      <ComposerPrimitive.Input
+        placeholder="Where do we feel like going next..."
+        className="scout-composer-input"
+        rows={1}
+        autoFocus
+        enterKeyHint="send"
+        aria-label="Message input"
+      />
+      <div className="scout-composer-actions">
+        <button
+          type="button"
+          className="scout-composer-plus"
+          aria-label="Add inspiration"
+        >
+          +
+        </button>
+
+        <AuiIf condition={(s) => !s.thread.isRunning}>
+          <ComposerPrimitive.Send
+            className="scout-composer-send"
+            aria-label="Send message"
+          >
+            <ArrowUpIcon size={18} strokeWidth={2} />
+          </ComposerPrimitive.Send>
+        </AuiIf>
+
+        <AuiIf condition={(s) => s.thread.isRunning}>
+          <ComposerPrimitive.Cancel
+            className="scout-composer-send"
+            aria-label="Stop generating"
+          >
+            <SquareIcon size={14} fill="currentColor" />
+          </ComposerPrimitive.Cancel>
+        </AuiIf>
+      </div>
+    </ComposerPrimitive.Root>
+  );
+}
+
+function EmptyComposer() {
+  return (
+    <div className="scout-empty-composer">
+      <ScoutComposer />
+    </div>
+  );
+}
+
+function ScoutThinking() {
+  return (
+    <AuiIf condition={(s) => s.thread.isRunning}>
+      <div className="scout-thinking" aria-live="polite" aria-label="SCOUT is thinking">
+        <span className="scout-thinking-label">SCOUT is thinking</span>
+        <span className="scout-thinking-signal" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+      </div>
+    </AuiIf>
+  );
+}
+
+function ActiveThread() {
+  return (
+    <section className="scout-active-thread" aria-label="SCOUT conversation">
+      <ThreadPrimitive.Root className="scout-thread-root">
+        <ThreadPrimitive.Viewport className="scout-thread-viewport">
+          <ThreadPrimitive.Messages>
+            {() => <ThreadMessage />}
+          </ThreadPrimitive.Messages>
+
+          <ThreadPrimitive.ViewportFooter className="scout-thread-footer">
+            <ScoutThinking />
+            <ScoutComposer />
+          </ThreadPrimitive.ViewportFooter>
+        </ThreadPrimitive.Viewport>
+      </ThreadPrimitive.Root>
+    </section>
+  );
+}
+
+function ScoutChat() {
+  const isEmpty = useAuiState(
+    (state) => state.thread.messages.length === 0 && !state.thread.isLoading
+  );
+
+  return isEmpty ? <EmptyComposer /> : <ActiveThread />;
+}
+
+function ScoutShell({ onNewTrip }) {
+  return (
+    <div className="scout-page">
+      <video
+        className="scout-bg-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source src="/assets/bangkok.mp4" type="video/mp4" />
+      </video>
+
+      <div className="scout-video-overlay" />
+      <div className="scout-brand">SCOUT</div>
+      <button
+        type="button"
+        className="scout-new-trip"
+        onClick={onNewTrip}
+      >
+        New Trip
+      </button>
+
+      <main className="scout-main">
+        <div className="scout-hero">
+          <section className="scout-intro">
+            <h1>So... what's the plan?</h1>
+            <p>
+              <strong>
+                SCOUT, your travel bestie who helps you travel better, not just travel cheaper.
+              </strong>
+            </p>
+          </section>
+
+          <ScoutChat />
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  const [sessionKey, setSessionKey] = useState(0);
+  const runtime = useScoutRuntime();
+
+  const startNewTrip = async () => {
+    try {
+      await fetch("/api/reset", {
+        method: "POST"
+      });
+    } catch (error) {
+      console.error("SCOUT reset failed:", error);
+    }
+
+    setSessionKey((key) => key + 1);
+  };
+
+  return (
+    <AssistantRuntimeProvider
+      key={sessionKey}
+      runtime={runtime}
+    >
+      <TooltipProvider>
+        <ScoutShell onNewTrip={startNewTrip} />
+      </TooltipProvider>
+    </AssistantRuntimeProvider>
+  );
+}

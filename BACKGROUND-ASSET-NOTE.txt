@@ -1,0 +1,2 @@
+Current reference HTML background source detected: ./assets/bangkok.mp4
+Keep the existing SCOUT background asset and wire its actual path into App.jsx/CSS after checking the current project.
