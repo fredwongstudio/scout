@@ -2,18 +2,29 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
-import FlightCardDev from "./components/scout/flight/FlightCardDev";
+import FlightCardsPreview from "./components/scout/flight/FlightCardsPreview";
+import BookingReviewPreview from "./components/scout/booking/BookingReviewPreview";
+import TravellerIdentityPreview from "./components/scout/booking/TravellerIdentityPreview";
+import PaymentMethodPreview from "./components/scout/booking/PaymentMethodPreview";
+import ReviewAuthorizePreview from "./components/scout/booking/ReviewAuthorizePreview";
+import AgentExecutionPreview from "./components/scout/booking/AgentExecutionPreview";
+import BookingConfirmationPreview from "./components/scout/booking/BookingConfirmationPreview";
+import TripDetailsPreview from "./components/scout/booking/TripDetailsPreview";
 
 import "./index.css";
 
-const isFlightCardDev =
-  new URLSearchParams(window.location.search).get(
-    "flightCardDev"
-  ) === "1";
+const previewByPath = {
+  "/dev/flight-cards": FlightCardsPreview,
+  "/dev/booking-review": BookingReviewPreview,
+  "/dev/traveller-identity": TravellerIdentityPreview,
+  "/dev/payment-method": PaymentMethodPreview,
+  "/dev/review-authorize": ReviewAuthorizePreview,
+  "/dev/agent-execution": AgentExecutionPreview,
+  "/dev/booking-confirmation": BookingConfirmationPreview,
+  "/dev/trip-details": TripDetailsPreview,
+};
 
-const Root = isFlightCardDev
-  ? FlightCardDev
-  : App;
+const Root = previewByPath[window.location.pathname] || App;
 
 ReactDOM.createRoot(
   document.getElementById("root")

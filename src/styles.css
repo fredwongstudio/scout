@@ -4,6 +4,81 @@
   --lavender:#b99aff;
 }
 
+@media print {
+  @page {
+    margin: 16mm;
+  }
+
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .scout-bg-video,
+  .scout-video-overlay,
+  .scout-brand,
+  .scout-new-trip,
+  .scout-trip-back,
+  .scout-trip-actions,
+  .scout-trip-email-panel {
+    display: none !important;
+  }
+
+  .scout-page,
+  .scout-main {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  .scout-trip-details {
+    width: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    color: #111 !important;
+  }
+
+  .scout-trip-details * {
+    color: #111 !important;
+    text-shadow: none !important;
+  }
+
+  .scout-trip-details .scout-booking-direct {
+    color: #166b4f !important;
+  }
+
+  .scout-trip-details .scout-trip-flight-card,
+  .scout-trip-details .scout-trip-travellers div,
+  .scout-trip-details .scout-trip-payment {
+    background: #fff !important;
+    border-color: #bbb !important;
+    break-inside: avoid;
+  }
+
+  .scout-trip-details .scout-trip-journey-middle i,
+  .scout-trip-details .scout-trip-journey-middle i::before,
+  .scout-trip-details .scout-trip-journey-middle i::after {
+    background: #555 !important;
+  }
+
+  .scout-trip-details .scout-trip-section-title,
+  .scout-trip-details .scout-booking-kicker {
+    color: #5f35a6 !important;
+  }
+}
+
 *{box-sizing:border-box}
 
 html,body,#root{
@@ -35,6 +110,13 @@ body{
   height:100%;
   object-fit:cover;
   z-index:0;
+  opacity:0;
+  transition:opacity 3s ease-in-out;
+  will-change:opacity;
+}
+
+.scout-bg-video.is-visible{
+  opacity:1;
 }
 
 .scout-video-overlay{
@@ -47,14 +129,25 @@ body{
 
 .scout-brand{
   position:absolute;
-  z-index:5;
+  z-index:6;
   left:5vw;
   top:28px;
+  padding:0;
+  border:0;
+  background:transparent;
   color:#fff;
+  font:inherit;
   font-size:25px;
   line-height:1;
   font-weight:400;
   letter-spacing:.16em;
+  cursor:pointer;
+}
+
+.scout-brand:focus-visible{
+  outline:2px solid rgba(217,202,255,.95);
+  outline-offset:5px;
+  border-radius:3px;
 }
 
 .scout-main{
@@ -63,16 +156,46 @@ body{
   z-index:5;
 }
 
+.scout-footer{
+  position:absolute;
+  z-index:6;
+  left:50%;
+  bottom:14px;
+  width:min(94vw,900px);
+  transform:translateX(-50%);
+  color:rgba(255,255,255,.52);
+  font-size:12px;
+  line-height:1.45;
+  text-align:center;
+  text-wrap:balance;
+}
+
+.scout-footer a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.scout-footer a:hover{
+  color:rgba(255,255,255,.78);
+  text-decoration:underline;
+}
+
+.scout-footer a:focus-visible{
+  outline:1px solid rgba(217,202,255,.95);
+  outline-offset:2px;
+  border-radius:2px;
+}
+
 .scout-hero{
   position:absolute;
   left:50%;
-  top:50%;
-  width:min(900px,92vw);
-  transform:translate(-50%,-38%);
+  top:41%;
+  width:min(1240px,94vw);
+  transform:translate(-50%,-40%);
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:24px;
+  gap:8px;
 }
 
 .scout-intro{
@@ -99,7 +222,7 @@ body{
 /* EMPTY STATE: a real assistant-ui ComposerPrimitive, floating directly
    over the background. There is no Thread or scroll container here. */
 .scout-empty-composer{
-  width:min(710px,92vw);
+  width:min(860px,92vw);
 }
 
 .scout-composer{
@@ -112,12 +235,12 @@ body{
   padding:9px 12px;
   border:1px solid rgba(255,255,255,.30);
   border-radius:16px;
-  background:rgba(15,15,15,.76);
+  background:#121212;
   box-shadow:
     0 18px 55px rgba(0,0,0,.34),
     inset 0 1px 0 rgba(255,255,255,.08);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
 }
 
 .scout-composer-input{
@@ -176,8 +299,8 @@ body{
 
 /* ACTIVE STATE: now and only now do we mount ThreadPrimitive. */
 .scout-active-thread{
-  width:min(710px,92vw);
-  height:min(620px,calc(100dvh - 190px));
+  width:min(960px,94vw);
+  height:min(900px,calc(100dvh - 108px));
   overflow:hidden;
   border:1px solid rgba(255,255,255,.30);
   border-radius:18px;
@@ -208,7 +331,7 @@ body{
   flex-direction:column;
   overflow-x:hidden;
   overflow-y:auto;
-  scroll-behavior:smooth;
+  scroll-behavior:auto;
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.16) transparent;
   background:transparent !important;
@@ -227,17 +350,12 @@ body{
 }
 
 .scout-thread-footer{
-  position:sticky;
+  position:relative;
   bottom:0;
   z-index:10;
   margin-top:auto;
-  padding:10px 12px 10px;
-  background:linear-gradient(
-    to bottom,
-    rgba(15,15,15,0),
-    rgba(15,15,15,.64) 34%,
-    rgba(15,15,15,.88) 100%
-  ) !important;
+  padding:8px 12px 12px;
+  background:transparent !important;
 }
 
 .scout-thread-footer .scout-composer{
@@ -258,6 +376,12 @@ body{
 }
 
 @media(max-width:620px){
+  .scout-footer{
+    bottom:10px;
+    width:calc(100% - 32px);
+    font-size:11px;
+  }
+
   .scout-brand{
     left:24px;
     top:20px;
@@ -266,8 +390,9 @@ body{
 
   .scout-hero{
     width:94vw;
-    transform:translate(-50%,-40%);
-    gap:18px;
+    top:44%;
+    transform:translate(-50%,-42%);
+    gap:10px;
   }
 
   .scout-intro p{
@@ -285,7 +410,7 @@ body{
   }
 
   .scout-active-thread{
-    height:min(560px,calc(100dvh - 170px));
+    height:min(630px,calc(100dvh - 135px));
   }
 }
 
@@ -310,8 +435,14 @@ body{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:2px 6px 5px;
-  min-height:22px;
+  align-self:flex-start;
+  width:fit-content;
+  min-height:28px;
+  margin:0 0 2px;
+  padding:5px 10px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:13px;
+  background:rgba(255,255,255,.07);
   color:rgba(255,255,255,.58);
   font-size:13px;
   line-height:18px;
@@ -367,13 +498,32 @@ body{
   }
 }
 
-/* SCOUT conversation treatment: the messages live inside the same glass surface. */
+/* SCOUT conversation treatment: message roots span one shared lane; their
+   content is then anchored to opposite lane edges. */
+.scout-active-thread [data-slot="aui_user-message-root"],
+.scout-active-thread [data-slot="aui_assistant-message-root"]{
+  width:100% !important;
+  max-width:var(--thread-max-width);
+  margin-inline:auto;
+}
+
 .scout-active-thread [data-slot="aui_user-message-root"]{
+  display:flex !important;
+  flex-direction:column;
+  align-items:flex-end;
   padding-left:8px !important;
   padding-right:8px !important;
 }
 
+.scout-active-thread .aui-user-message-content-wrapper{
+  width:fit-content;
+  max-width:75%;
+  align-self:flex-end;
+}
+
 .scout-active-thread .aui-user-message-content{
+  width:fit-content;
+  max-width:100%;
   background:rgba(185,154,255,.22) !important;
   border:1px solid rgba(185,154,255,.45);
   color:#fff !important;
@@ -381,9 +531,16 @@ body{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
 }
 
+.scout-active-thread [data-slot="aui_assistant-message-root"]{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+
 .scout-active-thread [data-slot="aui_assistant-message-content"]{
   width:fit-content;
-  max-width:min(90%,620px);
+  max-width:75%;
+  align-self:flex-start;
   padding:10px 14px !important;
   border:1px solid rgba(255,255,255,.12);
   border-radius:13px;
@@ -419,8 +576,40 @@ body{
 }
 
 .scout-active-thread .scout-thread-footer{
-  padding-left:4px;
-  padding-right:4px;
+  padding:8px 12px 12px;
+  background:transparent !important;
+}
+
+/* Bubbles, data results, and the composer share the Thread content token.
+   Flight cards remain a two-column grid inside that single aligned column. */
+.scout-active-thread .scout-flight-results,
+.scout-active-thread .scout-composer{
+  width:100%;
+  max-width:var(--thread-max-width);
+  margin-inline:auto;
+}
+
+/* Flight-result data is the one assistant part allowed to use the full lane.
+   It is rendered inside the normal assistant-content wrapper, so widen that
+   wrapper before sizing the grid rather than letting the grid overflow it. */
+@media(min-width:621px){
+  .scout-active-thread [data-slot="aui_assistant-message-root"]:has(.scout-flight-results){
+    min-width:0;
+  }
+
+  .scout-active-thread [data-slot="aui_assistant-message-content"]:has(.scout-flight-results){
+    width:100%;
+    max-width:var(--thread-max-width);
+    min-width:0;
+    align-self:stretch;
+  }
+
+  .scout-active-thread .scout-flight-results{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin-inline:0;
+  }
 }
 
 /* SCOUT intentionally omits assistant-ui's optional ScrollToBottom button.
@@ -461,12 +650,12 @@ body{
 .scout-active-thread .scout-composer {
   border: 1px solid rgba(255,255,255,.30) !important;
   border-radius: 16px !important;
-  background: rgba(15,15,15,.76) !important;
+  background: #121212 !important;
   box-shadow:
     0 18px 55px rgba(0,0,0,.34),
     inset 0 1px 0 rgba(255,255,255,.08) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .scout-active-thread .scout-composer-input {
@@ -483,16 +672,70 @@ body{
    SCOUT FLIGHT CARD
    ============================================================ */
 
+.scout-flight-results {
+  width: 100%;
+  min-width: 0;
+  margin: 14px 0 18px;
+}
+
+.scout-flight-preview-page {
+  min-height: 100dvh;
+  padding: 40px 24px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(185,154,255,.14), transparent 42%),
+    #090909;
+}
+
+.scout-flight-preview-brand {
+  width: min(52rem, 100%);
+  margin: 0 auto 28px;
+  color: #fff;
+  font-size: 22px;
+  letter-spacing: .16em;
+}
+
+.scout-flight-preview-content {
+  width: min(52rem, 100%);
+  margin: 0 auto;
+}
+
+.scout-flight-results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+}
+
+.scout-flight-result-summary {
+  margin: 0 0 12px;
+}
+
+.scout-flight-result-route {
+  color: rgba(255,255,255,.96);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+.scout-flight-result-meta {
+  margin-top: 3px;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .scout-flight-card {
   width: 100%;
-  max-width: 680px;
-  margin: 14px 0 18px;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
   overflow: hidden;
 
   border: 1px solid rgba(255,255,255,.18);
   border-radius: 20px;
 
-  background: rgba(15,15,15,.78);
+  background: rgba(13,14,24,.88);
 
   box-shadow:
     0 18px 55px rgba(0,0,0,.30),
@@ -509,23 +752,24 @@ body{
   align-items: flex-start;
   justify-content: space-between;
 
-  padding: 18px 20px;
+  min-height: 75px;
+  padding: 15px 16px;
 
   border-bottom: 1px solid rgba(255,255,255,.10);
 }
 
-.scout-flight-airline {
-  font-size: 15px;
+.scout-flight-card-label {
+  margin-bottom: 7px;
+  color: var(--lavender);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: -.01em;
+  letter-spacing: .1em;
 }
 
-.scout-flight-card-subtitle {
-  margin-top: 3px;
-
-  color: rgba(255,255,255,.48);
-
-  font-size: 12px;
+.scout-flight-airline {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -.01em;
 }
 
 .scout-flight-fare {
@@ -544,7 +788,7 @@ body{
 /* Journey */
 
 .scout-flight-card-body {
-  padding: 18px 20px;
+  padding: 16px;
 }
 
 .scout-flight-journey {
@@ -556,7 +800,7 @@ body{
   align-items: center;
   justify-content: space-between;
 
-  margin-bottom: 17px;
+  margin-bottom: 12px;
 
   color: rgba(255,255,255,.52);
 
@@ -567,16 +811,16 @@ body{
 
 .scout-flight-route {
   display: grid;
-  grid-template-columns: 72px 1fr 72px;
+  grid-template-columns: 54px minmax(0, 1fr) 54px;
   align-items: center;
-  gap: 14px;
+  gap: 9px;
 }
 
 .scout-flight-time {
   display: flex;
   flex-direction: column;
 
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   letter-spacing: -.035em;
 }
@@ -599,9 +843,31 @@ body{
 .scout-flight-line {
   position: relative;
 
+  width: 100%;
   height: 1px;
 
   background: rgba(255,255,255,.20);
+}
+
+.scout-flight-route-centre {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+}
+
+.scout-flight-duration,
+.scout-flight-stops {
+  color: rgba(210,193,255,.82);
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.scout-flight-stops {
+  min-height: 10px;
 }
 
 .scout-flight-line::before,
@@ -629,50 +895,10 @@ body{
   right: 0;
 }
 
-.scout-flight-stop {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.scout-flight-stop span {
-  width: 4px;
-  height: 4px;
-
-  border-radius: 50%;
-
-  background: rgba(185,154,255,.9);
-}
-
-.scout-flight-segments {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-
-  margin-top: 12px;
-}
-
-.scout-flight-segments span {
-  padding: 3px 7px;
-
-  border-radius: 999px;
-
-  background: rgba(255,255,255,.06);
-
-  color: rgba(255,255,255,.42);
-
-  font-size: 9px;
-  letter-spacing: .04em;
-}
-
 .scout-flight-divider {
   height: 1px;
 
-  margin: 20px 0;
+  margin: 16px 0;
 
   background: rgba(255,255,255,.09);
 }
@@ -681,11 +907,11 @@ body{
 
 .scout-flight-card-footer {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 5px;
 
-  padding: 17px 20px;
+  padding: 15px 16px;
 
   border-top: 1px solid rgba(255,255,255,.09);
 
@@ -693,17 +919,38 @@ body{
 }
 
 .scout-flight-passengers {
-  margin-bottom: 4px;
-
   color: rgba(255,255,255,.45);
 
   font-size: 11px;
 }
 
 .scout-flight-price {
-  font-size: 22px;
+  margin-top: 4px;
+  font-size: 24px;
   font-weight: 500;
   letter-spacing: -.035em;
+}
+
+.scout-flight-price-unit {
+  margin-left: 4px;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.scout-flight-total-price {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-top: 2px;
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+}
+
+.scout-flight-total-price span {
+  color: rgba(255,255,255,.38);
+  font-size: 10px;
 }
 
 .scout-flight-price-label {
@@ -715,24 +962,28 @@ body{
 }
 
 .scout-flight-select {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 
-  min-height: 38px;
+  min-height: 40px;
+  margin-top: 10px;
   padding: 0 16px;
 
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
 
-  background: var(--lavender);
+  background: linear-gradient(135deg, #6337ad, #8651d4);
   color: #fff;
 
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
+  box-shadow: 0 8px 18px rgba(79,39,148,.30);
 
   transition:
     transform .15s ease,
@@ -740,17 +991,983 @@ body{
 }
 
 .scout-flight-select:hover {
-  filter: brightness(1.08);
+  background: linear-gradient(135deg, #7141be, #9564e1);
+  filter: brightness(1.02);
   transform: translateY(-1px);
+}
+
+.scout-flight-select:focus-visible {
+  outline: 2px solid #d9caff;
+  outline-offset: 2px;
 }
 
 .scout-flight-select:active {
   transform: translateY(0);
 }
 
+.scout-flight-direct {
+  color: #83ddb8;
+}
+
+/* Booking Review is deliberately a UI-only continuation of a selected flight
+   card. It does not add booking state to the conversation or call Atlas. */
+.scout-booking-review {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-booking-review-header {
+  margin-bottom: 22px;
+}
+
+.scout-booking-back {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--lavender);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scout-booking-back:hover {
+  color: #e4d9ff;
+}
+
+.scout-booking-back:focus-visible {
+  outline: 2px solid #d9caff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.scout-booking-back + header {
+  margin-top: 18px;
+}
+
+.scout-booking-kicker,
+.scout-booking-itinerary-label,
+.scout-booking-journey-label {
+  color: var(--lavender);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+
+.scout-booking-review h1 {
+  margin: 7px 0 13px;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.scout-booking-route-summary {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+.scout-booking-summary-meta {
+  margin-top: 4px;
+  color: rgba(255,255,255,.54);
+  font-size: 13px;
+}
+
+.scout-booking-itinerary {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 17px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-booking-itinerary-header {
+  padding: 15px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.scout-booking-airline {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.scout-booking-itinerary-body {
+  padding: 16px 18px;
+}
+
+.scout-booking-journey + .scout-booking-journey {
+  margin-top: 16px;
+}
+
+.scout-booking-journey-label {
+  margin-bottom: 12px;
+  color: rgba(255,255,255,.52);
+}
+
+.scout-booking-route {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 70px;
+  align-items: center;
+  gap: 12px;
+}
+
+.scout-booking-time {
+  display: flex;
+  flex-direction: column;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.scout-booking-time span {
+  margin-top: 4px;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.scout-booking-time-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.scout-booking-route-centre {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.scout-booking-duration,
+.scout-booking-stops {
+  color: rgba(210,193,255,.82);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.scout-booking-line {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,.20);
+}
+
+.scout-booking-line::before,
+.scout-booking-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.75);
+  transform: translateY(-50%);
+}
+
+.scout-booking-line::before { left: 0; }
+.scout-booking-line::after { right: 0; }
+.scout-booking-direct { color: #83ddb8; }
+
+.scout-booking-divider {
+  height: 1px;
+  margin: 18px 0;
+  background: rgba(255,255,255,.09);
+}
+
+.scout-booking-revalidation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+}
+
+.scout-booking-revalidation span:first-child { color: #83ddb8; }
+
+.scout-booking-commercial-status {
+  display: grid;
+  gap: 6px;
+}
+
+.scout-booking-commercial-status div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scout-booking-checking-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lavender);
+  box-shadow: 0 0 0 4px rgba(185,154,255,.14);
+}
+
+.scout-booking-fare {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-booking-section-title {
+  color: var(--lavender);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+
+.scout-booking-fare-type {
+  margin-top: 8px;
+  color: rgba(255,255,255,.86);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.scout-booking-fare-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.scout-booking-fare-total span,
+.scout-booking-fare-travellers {
+  color: rgba(255,255,255,.54);
+  font-size: 12px;
+}
+
+.scout-booking-fare-total strong {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -.02em;
+}
+
+.scout-booking-fare-travellers {
+  margin-top: 5px;
+}
+
+.scout-booking-per-person {
+  margin-top: 14px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.scout-booking-per-person span {
+  margin-left: 5px;
+  color: rgba(255,255,255,.54);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.scout-booking-unknown-details {
+  display: grid;
+  gap: 11px;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,.09);
+}
+
+.scout-booking-unknown-details div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.scout-booking-unknown-details span {
+  color: rgba(255,255,255,.54);
+  font-size: 12px;
+}
+
+.scout-booking-unknown-details strong {
+  color: rgba(255,255,255,.78);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.scout-booking-commercial-note {
+  margin: 15px 0 0;
+  color: rgba(255,255,255,.44);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.scout-booking-continue {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6337ad, #8651d4);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scout-booking-continue:focus-visible {
+  outline: 2px solid #d9caff;
+  outline-offset: 2px;
+}
+
+.scout-booking-next-step {
+  margin: 12px 0 0;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.scout-booking-preview-page {
+  min-height: 100dvh;
+  padding: 40px 24px;
+  background: radial-gradient(circle at 50% 0%, rgba(185,154,255,.14), transparent 42%), #090909;
+}
+
+.scout-booking-preview-page .scout-booking-review {
+  margin-top: 0;
+}
+
+/* Traveller Identity is a local prototype flow. The records shown here are
+   fictional demo data and are never sent to a provider or persisted. */
+.scout-traveller-identity {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-traveller-identity-header h1 {
+  margin: 7px 0 10px;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.scout-traveller-identity-header p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.scout-traveller-identity-count {
+  margin-top: 12px;
+  color: var(--lavender);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.scout-travel-id-option {
+  margin-top: 23px;
+  padding: 20px;
+  border: 1px solid rgba(185,154,255,.42);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(99,55,173,.24), rgba(255,255,255,.035));
+}
+
+.scout-travel-id-badge {
+  color: var(--lavender);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+
+.scout-travel-id-option h2 {
+  margin: 10px 0 6px;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+.scout-travel-id-option p {
+  margin: 0;
+  color: rgba(255,255,255,.65);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.scout-travel-id-demo-note {
+  display: inline-block;
+  margin-top: 10px;
+  color: rgba(255,255,255,.42);
+  font-size: 11px;
+}
+
+.scout-travel-id-action,
+.scout-identity-alternatives button,
+.scout-manual-identity button {
+  border: 0;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scout-travel-id-action {
+  display: flex;
+  width: 100%;
+  min-height: 45px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #6337ad, #8651d4);
+}
+
+.scout-identity-alternatives {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.scout-identity-alternatives > div,
+.scout-manual-identity {
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 15px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-identity-alternatives strong,
+.scout-identity-alternatives span {
+  display: block;
+}
+
+.scout-identity-alternatives strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.scout-identity-alternatives span {
+  min-height: 34px;
+  margin-top: 6px;
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.scout-identity-alternatives button,
+.scout-manual-identity button {
+  margin-top: 13px;
+  padding: 0;
+  background: transparent;
+  color: var(--lavender);
+  font-size: 12px;
+}
+
+.scout-identity-alternatives button:disabled,
+.scout-travel-id-action:disabled {
+  cursor: wait;
+  opacity: .58;
+}
+
+.scout-manual-identity {
+  margin-top: 14px;
+}
+
+.scout-manual-identity-title {
+  color: rgba(255,255,255,.72);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.scout-manual-identity-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.scout-manual-identity label {
+  color: rgba(255,255,255,.56);
+  font-size: 11px;
+}
+
+.scout-manual-identity input {
+  width: 100%;
+  min-height: 34px;
+  margin-top: 5px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 8px;
+  outline: none;
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.scout-identity-processing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 17px;
+  color: rgba(255,255,255,.70);
+  font-size: 13px;
+}
+
+.scout-identity-ready-state {
+  margin-top: 22px;
+}
+
+.scout-identity-ready-title,
+.scout-identity-all-ready {
+  color: #83ddb8;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.scout-identity-records {
+  display: grid;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.scout-identity-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 13px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-identity-record strong,
+.scout-identity-record span {
+  display: block;
+}
+
+.scout-identity-record strong { font-size: 14px; }
+.scout-identity-record span { margin-top: 3px; color: rgba(255,255,255,.52); font-size: 12px; }
+.scout-identity-ready { color: #83ddb8; font-size: 12px; white-space: nowrap; }
+
+.scout-identity-control {
+  display: grid;
+  gap: 5px;
+  margin-top: 15px;
+  padding: 14px 15px;
+  border-radius: 13px;
+  background: rgba(131,221,184,.08);
+  color: rgba(255,255,255,.78);
+}
+
+.scout-identity-control strong { color: #83ddb8; font-size: 13px; }
+.scout-identity-control span { color: rgba(255,255,255,.58); font-size: 12px; line-height: 1.4; }
+.scout-identity-all-ready { margin-top: 15px; }
+
+.scout-identity-payment:disabled {
+  cursor: not-allowed;
+  filter: grayscale(.4);
+  opacity: .48;
+}
+
+.scout-booking-preview-page .scout-traveller-identity { margin-top: 0; }
+
+/* Payment Method uses only local demo instruments. It is selection UI, not an
+   authorization, payment, wallet connection, or blockchain integration. */
+.scout-payment-method {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-payment-method-header h1 {
+  margin: 7px 0 10px;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.scout-payment-method-header p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.scout-payment-context {
+  display: grid;
+  gap: 4px;
+  margin-top: 20px;
+  padding: 15px 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 15px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-payment-context > strong { font-size: 15px; font-weight: 500; }
+.scout-payment-context > span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-payment-context div { display: flex; justify-content: space-between; align-items: baseline; margin-top: 7px; }
+.scout-payment-context div span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-payment-context div strong { font-size: 17px; font-weight: 500; }
+
+.scout-payment-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 16px;
+}
+
+.scout-payment-option {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 17px;
+  background: rgba(255,255,255,.025);
+}
+
+.scout-payment-option-primary { border-color: rgba(185,154,255,.40); background: linear-gradient(135deg, rgba(99,55,173,.22), rgba(255,255,255,.035)); }
+.scout-payment-option-selected { border-color: rgba(185,154,255,.90); background: linear-gradient(135deg, rgba(99,55,173,.32), rgba(185,154,255,.10)); box-shadow: 0 0 0 1px rgba(185,154,255,.18), 0 14px 30px rgba(99,55,173,.16); }
+.scout-payment-badge { display: flex; align-items: center; gap: 8px; color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .09em; }
+.scout-payment-badge span { padding: 3px 6px; border: 1px solid rgba(185,154,255,.48); border-radius: 999px; background: rgba(185,154,255,.10); color: #e1d5ff; font-size: 9px; letter-spacing: .08em; }
+.scout-payment-option-selected-label { margin-top: 9px; color: #e1d5ff; font-size: 10px; font-weight: 600; letter-spacing: .09em; }
+.scout-payment-option h2 { margin: 10px 0 5px; font-size: 19px; font-weight: 500; letter-spacing: -.025em; }
+.scout-payment-detail { color: rgba(255,255,255,.82); font-size: 14px; font-weight: 500; }
+.scout-payment-option p { margin: 8px 0 0; color: rgba(255,255,255,.52); font-size: 12px; line-height: 1.45; }
+.scout-payment-option button { width: 100%; min-height: 39px; margin-top: auto; border: 0; border-radius: 10px; background: linear-gradient(135deg, #6337ad, #8651d4); color: #fff; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.scout-payment-option button:hover { filter: brightness(1.07); }
+.scout-payment-option button:focus-visible { outline: 2px solid #d9caff; outline-offset: 3px; }
+
+.scout-payment-selected-state {
+  margin-top: 15px;
+  color: #83ddb8;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.scout-payment-control {
+  margin-top: 15px;
+  padding: 13px 15px;
+  border-radius: 13px;
+  background: rgba(131,221,184,.08);
+  color: rgba(255,255,255,.68);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.scout-payment-authorize:disabled { cursor: not-allowed; filter: grayscale(.4); opacity: .48; }
+.scout-booking-preview-page .scout-payment-method { margin-top: 0; }
+
+/* Review & Authorize is the local human approval boundary only. It does not
+   execute any payment, provider call, booking request, or confirmation. */
+.scout-review-authorize {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-review-authorize-header h1 { margin: 7px 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.scout-review-authorize-header p { margin: 0; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.45; }
+.scout-authorize-section { margin-top: 22px; }
+.scout-authorize-section-title { margin-bottom: 10px; color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.scout-authorize-route, .scout-authorize-meta { display: block; }
+.scout-authorize-route { font-size: 16px; font-weight: 500; }
+.scout-authorize-meta { margin-top: 4px; color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-authorize-flight-card { margin-top: 13px; padding: 15px; border: 1px solid rgba(255,255,255,.10); border-radius: 15px; background: rgba(255,255,255,.025); }
+.scout-authorize-airline { margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+.scout-authorize-journey-label { margin-bottom: 9px; color: rgba(255,255,255,.52); font-size: 10px; font-weight: 600; letter-spacing: .08em; }
+.scout-authorize-journey-route { display: grid; grid-template-columns: 54px minmax(0, 1fr) 54px; gap: 10px; align-items: center; }
+.scout-authorize-journey-route > div:first-child, .scout-authorize-journey-route > div:last-child { display: flex; flex-direction: column; }
+.scout-authorize-journey-route > div:last-child { align-items: flex-end; text-align: right; }
+.scout-authorize-journey-route strong { font-size: 17px; font-weight: 500; letter-spacing: -.035em; }
+.scout-authorize-journey-route span { margin-top: 3px; color: rgba(255,255,255,.52); font-size: 11px; }
+.scout-authorize-journey-middle { display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 6px; }
+.scout-authorize-journey-middle i { position: relative; width: 100%; height: 1px; background: rgba(255,255,255,.20); }
+.scout-authorize-journey-middle i::before, .scout-authorize-journey-middle i::after { content: ""; position: absolute; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.75); transform: translateY(-50%); }
+.scout-authorize-journey-middle i::before { left: 0; }
+.scout-authorize-journey-middle i::after { right: 0; }
+.scout-authorize-journey-middle > span, .scout-authorize-journey-middle em { margin: 0; color: rgba(210,193,255,.82); font-size: 10px; font-style: normal; }
+.scout-authorize-journey-middle em.scout-booking-direct { color: #83ddb8; }
+.scout-authorize-travellers { display: grid; gap: 8px; }
+.scout-authorize-travellers > div { display: flex; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.10); border-radius: 12px; background: rgba(255,255,255,.025); color: rgba(255,255,255,.70); font-size: 13px; }
+.scout-authorize-travellers strong { color: #fff; font-weight: 500; }
+.scout-authorize-travellers em, .scout-authorize-payment em { color: #83ddb8; font-size: 12px; font-style: normal; white-space: nowrap; }
+.scout-authorize-payment { display: grid; gap: 4px; padding: 14px 15px; border: 1px solid rgba(255,255,255,.10); border-radius: 13px; background: rgba(255,255,255,.025); }
+.scout-authorize-payment strong { font-size: 14px; font-weight: 500; }
+.scout-authorize-payment span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-authorize-change { margin-top: 10px; padding: 0; border: 0; background: transparent; color: var(--lavender); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.scout-authorize-total { margin-top: 22px; padding: 19px; border: 1px solid rgba(185,154,255,.30); border-radius: 16px; background: linear-gradient(135deg, rgba(99,55,173,.20), rgba(255,255,255,.025)); }
+.scout-authorize-total > span { color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.scout-authorize-total > strong { display: block; margin-top: 8px; font-size: 32px; font-weight: 500; letter-spacing: -.04em; }
+.scout-authorize-total p { margin: 8px 0 0; color: rgba(255,255,255,.50); font-size: 11px; line-height: 1.45; }
+.scout-authorize-explanation { margin-top: 17px; color: rgba(255,255,255,.64); font-size: 12px; line-height: 1.5; }
+.scout-authorize-explanation strong { color: #fff; font-size: 13px; font-weight: 500; }
+.scout-authorize-explanation p { margin: 7px 0; }
+.scout-authorize-explanation span { color: #83ddb8; }
+.scout-authorize-cta { display: flex; width: 100%; min-height: 50px; align-items: center; justify-content: center; margin-top: 20px; padding: 0 16px; border: 0; border-radius: 12px; background: linear-gradient(135deg, #6337ad, #8651d4); color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.scout-authorize-cta:disabled { cursor: not-allowed; filter: grayscale(.4); opacity: .60; }
+.scout-authorize-local-note { margin: 10px 0 0; color: #83ddb8; font-size: 12px; text-align: center; }
+.scout-booking-preview-page .scout-review-authorize { margin-top: 0; }
+
+/* Agent Execution is a deterministic local presentation sequence. It makes no
+   external payment, booking, ticketing, or provider call. */
+.scout-agent-execution {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-agent-execution-header h1 { margin: 7px 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.scout-agent-execution-header p, .scout-agent-execution-unavailable p { margin: 0; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.45; }
+.scout-execution-context { display: grid; gap: 4px; margin-top: 21px; padding: 15px 16px; border: 1px solid rgba(255,255,255,.10); border-radius: 15px; background: rgba(255,255,255,.025); }
+.scout-execution-context strong { font-size: 15px; font-weight: 500; }
+.scout-execution-context span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-execution-context em { margin-top: 5px; color: var(--lavender); font-size: 19px; font-style: normal; font-weight: 500; letter-spacing: -.025em; }
+.scout-execution-timeline { display: grid; gap: 0; margin: 24px 0 0; padding: 0; list-style: none; }
+.scout-execution-timeline li { position: relative; display: flex; align-items: center; gap: 12px; min-height: 51px; color: rgba(255,255,255,.36); font-size: 14px; }
+.scout-execution-timeline li:not(:last-child)::after { content: ""; position: absolute; left: 8px; top: 34px; width: 1px; height: 22px; background: rgba(255,255,255,.16); }
+.scout-execution-timeline i { display: grid; width: 17px; height: 17px; place-items: center; color: rgba(255,255,255,.42); font-size: 15px; font-style: normal; }
+.scout-execution-timeline li.is-active { color: #fff; }
+.scout-execution-timeline li.is-active i { color: var(--lavender); }
+.scout-execution-timeline li.is-complete { color: rgba(255,255,255,.78); }
+.scout-execution-timeline li.is-complete i { color: #83ddb8; }
+.scout-execution-complete { display: grid; gap: 5px; margin-top: 19px; padding: 15px; border-radius: 14px; background: rgba(131,221,184,.08); }
+.scout-execution-complete strong { color: #83ddb8; font-size: 13px; font-weight: 500; }
+.scout-execution-complete span { color: rgba(255,255,255,.58); font-size: 12px; }
+.scout-execution-view-booking:disabled { cursor: not-allowed; filter: grayscale(.4); opacity: .48; }
+.scout-agent-execution-unavailable h1 { margin: 8px 0 10px; font-size: 32px; font-weight: 500; }
+.scout-agent-execution-unavailable .scout-booking-continue { margin-top: 22px; }
+.scout-booking-preview-page .scout-agent-execution { margin-top: 0; }
+
+/* Booking Confirmation is the visual endpoint of this local prototype. Its
+   status and references come from completed simulated execution only. */
+.scout-booking-confirmation {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-confirmation-header h1 { margin: 7px 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.scout-confirmation-header p { margin: 0; color: rgba(255,255,255,.62); font-size: 14px; }
+.scout-confirmation-status { display: grid; gap: 10px; margin-top: 22px; padding: 17px; border: 1px solid rgba(131,221,184,.38); border-radius: 16px; background: rgba(131,221,184,.08); }
+.scout-confirmation-status > strong { color: #83ddb8; font-size: 16px; font-weight: 500; }
+.scout-confirmation-status div { display: flex; justify-content: space-between; gap: 12px; color: rgba(255,255,255,.58); font-size: 12px; }
+.scout-confirmation-status em { color: rgba(255,255,255,.84); font-size: 12px; font-style: normal; font-weight: 500; }
+.scout-confirmation-section { margin-top: 22px; }
+.scout-confirmation-section-title { margin-bottom: 10px; color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.scout-confirmation-section > strong, .scout-confirmation-section > span { display: block; }
+.scout-confirmation-section > strong { font-size: 16px; font-weight: 500; }
+.scout-confirmation-section > span { margin-top: 4px; color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-confirmation-flight { display: grid; gap: 0; margin-top: 12px; padding: 15px; border: 1px solid rgba(255,255,255,.10); border-radius: 15px; background: rgba(255,255,255,.025); }
+.scout-confirmation-flight > strong { margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+.scout-confirmation-journey-label { margin-bottom: 8px; color: rgba(255,255,255,.52); font-size: 10px; font-weight: 600; letter-spacing: .08em; }
+.scout-confirmation-journey-row { display: grid; grid-template-columns: auto auto 1fr auto auto; align-items: baseline; gap: 6px; }
+.scout-confirmation-journey-row strong { font-size: 16px; font-weight: 500; letter-spacing: -.025em; }
+.scout-confirmation-journey-row span { color: rgba(255,255,255,.54); font-size: 11px; }
+.scout-confirmation-journey-row i { color: var(--lavender); font-style: normal; text-align: center; }
+.scout-confirmation-stops { margin-top: 7px; color: rgba(210,193,255,.82); font-size: 11px; }
+.scout-confirmation-travellers { display: grid; gap: 8px; }
+.scout-confirmation-travellers div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 13px; border: 1px solid rgba(255,255,255,.10); border-radius: 12px; background: rgba(255,255,255,.025); }
+.scout-confirmation-travellers strong { font-size: 13px; font-weight: 500; }
+.scout-confirmation-travellers span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-confirmation-payment { margin-top: 22px; padding: 17px; border: 1px solid rgba(185,154,255,.30); border-radius: 16px; background: linear-gradient(135deg, rgba(99,55,173,.18), rgba(255,255,255,.025)); }
+.scout-confirmation-payment > strong, .scout-confirmation-payment > span, .scout-confirmation-payment > em { display: block; }
+.scout-confirmation-payment > strong { font-size: 15px; font-weight: 500; }
+.scout-confirmation-payment > span { margin-top: 13px; color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-confirmation-payment > em { margin-top: 4px; font-size: 27px; font-style: normal; font-weight: 500; letter-spacing: -.035em; }
+.scout-confirmation-payment p { margin: 9px 0 0; color: rgba(255,255,255,.48); font-size: 11px; }
+.scout-confirmation-message { display: grid; gap: 5px; margin-top: 20px; text-align: center; }
+.scout-confirmation-message strong { font-size: 15px; font-weight: 500; }
+.scout-confirmation-message span { color: rgba(255,255,255,.52); font-size: 12px; }
+.scout-confirmation-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+.scout-confirmation-actions > button { width: 100%; min-height: 48px; margin-top: 0; }
+.scout-confirmation-done { border: 1px solid rgba(255,255,255,.17); border-radius: 12px; background: rgba(255,255,255,.05); color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.scout-booking-preview-page .scout-booking-confirmation { margin-top: 0; }
+
+/* Trip Details is read-only navigation over the completed local booking
+   session. It does not restart any commerce or execution behavior. */
+.scout-trip-details {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-trip-back { padding: 0; border: 0; background: transparent; color: var(--lavender); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.scout-trip-details-header { margin-top: 18px; }
+.scout-trip-details-header h1 { margin: 7px 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.scout-trip-details-header p { margin: 0; color: #83ddb8; font-size: 14px; }
+.scout-trip-details-header > span { display: block; margin-top: 8px; color: rgba(255,255,255,.52); font-size: 12px; }
+.scout-trip-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+.scout-trip-actions button { min-height: 38px; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; background: rgba(255,255,255,.045); color: rgba(255,255,255,.84); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.scout-trip-email-panel { margin-top: 11px; padding: 14px; border: 1px solid rgba(185,154,255,.28); border-radius: 13px; background: rgba(99,55,173,.12); }
+.scout-trip-email-title { color: #fff; font-size: 13px; font-weight: 500; }
+.scout-trip-email-panel form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: 10px; }
+.scout-trip-email-panel input { min-width: 0; height: 36px; padding: 0 10px; border: 1px solid rgba(255,255,255,.17); border-radius: 9px; outline: 0; background: rgba(0,0,0,.22); color: #fff; font: inherit; font-size: 12px; }
+.scout-trip-email-panel button { padding: 0 12px; border: 0; border-radius: 9px; background: linear-gradient(135deg, #6337ad, #8651d4); color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.scout-trip-email-panel button:disabled { cursor: not-allowed; opacity: .5; }
+.scout-trip-email-note, .scout-trip-email-sent span { display: block; margin-top: 8px; color: rgba(255,255,255,.48); font-size: 11px; }
+.scout-trip-email-sent { margin-top: 10px; color: #83ddb8; font-size: 13px; }
+.scout-trip-section { margin-top: 24px; }
+.scout-trip-section-title { margin-bottom: 10px; color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.scout-trip-route { font-size: 16px; font-weight: 500; }
+.scout-trip-flight-card { display: grid; gap: 0; margin-top: 13px; padding: 15px; border: 1px solid rgba(255,255,255,.10); border-radius: 15px; background: rgba(255,255,255,.025); }
+.scout-trip-airline { margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+.scout-trip-journey-label { margin-bottom: 9px; color: rgba(255,255,255,.52); font-size: 10px; font-weight: 600; letter-spacing: .08em; }
+.scout-trip-journey-route { display: grid; grid-template-columns: 54px minmax(0, 1fr) 54px; gap: 10px; align-items: center; }
+.scout-trip-journey-route > div:first-child, .scout-trip-journey-route > div:last-child { display: flex; flex-direction: column; }
+.scout-trip-journey-route > div:last-child { align-items: flex-end; text-align: right; }
+.scout-trip-journey-route strong { font-size: 17px; font-weight: 500; letter-spacing: -.035em; }
+.scout-trip-journey-route span { margin-top: 3px; color: rgba(255,255,255,.52); font-size: 11px; }
+.scout-trip-journey-middle { display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 6px; }
+.scout-trip-journey-middle i { position: relative; width: 100%; height: 1px; background: rgba(255,255,255,.20); }
+.scout-trip-journey-middle i::before, .scout-trip-journey-middle i::after { content: ""; position: absolute; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.75); transform: translateY(-50%); }
+.scout-trip-journey-middle i::before { left: 0; }
+.scout-trip-journey-middle i::after { right: 0; }
+.scout-trip-journey-middle > span, .scout-trip-journey-middle em { margin: 0; color: rgba(210,193,255,.82); font-size: 10px; font-style: normal; }
+.scout-trip-travellers { display: grid; gap: 8px; }
+.scout-trip-travellers div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 13px; border: 1px solid rgba(255,255,255,.10); border-radius: 12px; background: rgba(255,255,255,.025); }
+.scout-trip-travellers strong { font-size: 13px; font-weight: 500; }
+.scout-trip-travellers span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-trip-payment { display: grid; gap: 5px; margin-top: 24px; padding: 16px; border: 1px solid rgba(185,154,255,.30); border-radius: 16px; background: linear-gradient(135deg, rgba(99,55,173,.18), rgba(255,255,255,.025)); }
+.scout-trip-payment > strong { font-size: 14px; font-weight: 500; }
+.scout-trip-payment > em { margin-top: 3px; font-size: 25px; font-style: normal; font-weight: 500; letter-spacing: -.035em; }
+.scout-trip-payment > span { color: rgba(255,255,255,.52); font-size: 11px; }
+.scout-trip-references { display: grid; gap: 8px; margin-top: 18px; }
+.scout-trip-references div { display: flex; justify-content: space-between; gap: 12px; color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-trip-references strong { color: rgba(255,255,255,.84); font-weight: 500; }
+.scout-booking-preview-page .scout-trip-details { margin-top: 0; }
+
+/* Keep the locally scrollable booking surfaces understated against SCOUT's
+   dark transaction UI without affecting the document or conversation thread. */
+.scout-booking-review,
+.scout-traveller-identity,
+.scout-payment-method,
+.scout-review-authorize,
+.scout-agent-execution,
+.scout-booking-confirmation,
+.scout-trip-details {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a50 #101013;
+}
+
+.scout-booking-review::-webkit-scrollbar,
+.scout-traveller-identity::-webkit-scrollbar,
+.scout-payment-method::-webkit-scrollbar,
+.scout-review-authorize::-webkit-scrollbar,
+.scout-agent-execution::-webkit-scrollbar,
+.scout-booking-confirmation::-webkit-scrollbar,
+.scout-trip-details::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scout-booking-review::-webkit-scrollbar-track,
+.scout-traveller-identity::-webkit-scrollbar-track,
+.scout-payment-method::-webkit-scrollbar-track,
+.scout-review-authorize::-webkit-scrollbar-track,
+.scout-agent-execution::-webkit-scrollbar-track,
+.scout-booking-confirmation::-webkit-scrollbar-track,
+.scout-trip-details::-webkit-scrollbar-track {
+  background: #101013;
+}
+
+.scout-booking-review::-webkit-scrollbar-thumb,
+.scout-traveller-identity::-webkit-scrollbar-thumb,
+.scout-payment-method::-webkit-scrollbar-thumb,
+.scout-review-authorize::-webkit-scrollbar-thumb,
+.scout-agent-execution::-webkit-scrollbar-thumb,
+.scout-booking-confirmation::-webkit-scrollbar-thumb,
+.scout-trip-details::-webkit-scrollbar-thumb {
+  border: 2px solid #101013;
+  border-radius: 999px;
+  background: #4a4a50;
+}
+
+.scout-booking-review::-webkit-scrollbar-thumb:hover,
+.scout-traveller-identity::-webkit-scrollbar-thumb:hover,
+.scout-payment-method::-webkit-scrollbar-thumb:hover,
+.scout-review-authorize::-webkit-scrollbar-thumb:hover,
+.scout-agent-execution::-webkit-scrollbar-thumb:hover,
+.scout-booking-confirmation::-webkit-scrollbar-thumb:hover,
+.scout-trip-details::-webkit-scrollbar-thumb:hover {
+  background: #66666d;
+}
+
 /* Mobile */
 
 @media (max-width: 620px) {
+
+  .scout-flight-preview-page {
+    padding: 24px 16px;
+  }
 
   .scout-flight-card {
     border-radius: 17px;
@@ -764,7 +1981,7 @@ body{
   }
 
   .scout-flight-route {
-    grid-template-columns: 58px 1fr 58px;
+    grid-template-columns: 50px 1fr 50px;
     gap: 9px;
   }
 
@@ -774,12 +1991,93 @@ body{
 
   .scout-flight-card-footer {
     align-items: stretch;
-    flex-direction: column;
   }
 
   .scout-flight-select {
     width: 100%;
     justify-content: center;
+  }
+
+  .scout-flight-results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scout-booking-review {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-booking-preview-page {
+    padding: 24px 12px;
+  }
+
+  .scout-booking-route {
+    grid-template-columns: 56px minmax(0, 1fr) 56px;
+    gap: 8px;
+  }
+
+  .scout-booking-time {
+    font-size: 17px;
+  }
+
+  .scout-traveller-identity {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-payment-method {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-review-authorize {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-agent-execution {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-booking-confirmation {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-trip-details {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-trip-actions { grid-template-columns: 1fr; }
+  .scout-trip-email-panel form { grid-template-columns: 1fr; }
+
+  .scout-identity-alternatives,
+  .scout-manual-identity-fields,
+  .scout-payment-options {
+    grid-template-columns: 1fr;
   }
 
 }

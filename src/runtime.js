@@ -1,9 +1,40 @@
+import { useRef } from "react";
 import { useLocalRuntime } from "@assistant-ui/react";
 
-export const useScoutRuntime = () => {
-  let conversationId = null;
+export async function resetActiveConversation({
+  conversationId,
+  clearConversationId,
+  fetchImpl = fetch
+}) {
+  try {
+    await fetchImpl("/api/reset", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ conversationId })
+    });
+  } finally {
+    clearConversationId();
+  }
+}
 
-  return useLocalRuntime({
+export function hardResetLocalConversation({
+  runtime,
+  clearConversationId,
+}) {
+  runtime.thread.reset();
+  clearConversationId();
+}
+
+export const useScoutRuntime = () => {
+  const conversationIdRef = useRef(null);
+
+  const clearConversationId = () => {
+    conversationIdRef.current = null;
+  };
+
+  const runtime = useLocalRuntime({
     async run({ messages, abortSignal }) {
       const lastUserMessage = [...messages]
         .reverse()
@@ -21,6 +52,14 @@ export const useScoutRuntime = () => {
         };
       }
 
+      console.log(
+        "[SCOUT UI DEBUG] runtime.run:",
+        JSON.stringify({
+          text,
+          conversationId: conversationIdRef.current
+        })
+      );
+
       const response = await fetch("/api/chat-v2", {
         method: "POST",
         headers: {
@@ -28,7 +67,7 @@ export const useScoutRuntime = () => {
         },
         body: JSON.stringify({
           message: text,
-          conversationId
+          conversationId: conversationIdRef.current
         }),
         signal: abortSignal
       });
@@ -41,8 +80,13 @@ export const useScoutRuntime = () => {
 
       const data = await response.json();
 
-      conversationId =
-        data.conversationId || conversationId;
+      console.log(
+        "[SCOUT UI DEBUG] API response:",
+        JSON.stringify(data, null, 2)
+      );
+
+      conversationIdRef.current =
+        data.conversationId || conversationIdRef.current;
 
       const content = [
         {
@@ -72,4 +116,26 @@ export const useScoutRuntime = () => {
       };
     }
   });
+
+  return {
+    runtime,
+    appendLocalAssistantMessage(text) {
+      runtime.thread.append({
+        role: "assistant",
+        content: [{ type: "text", text }],
+      });
+    },
+    resetConversation() {
+      return resetActiveConversation({
+        conversationId: conversationIdRef.current,
+        clearConversationId
+      });
+    },
+    hardResetConversation() {
+      hardResetLocalConversation({
+        runtime,
+        clearConversationId,
+      });
+    }
+  };
 };

@@ -105,21 +105,27 @@ const ThreadRoot = ({ isEmpty, className = "" }) => {
   const {
     Welcome = ThreadWelcome,
     Composer: ComposerComponent = Composer,
+    Thinking: ThinkingComponent = null,
   } = useContext(ThreadComponentsContext);
 
   return (
     <ThreadPrimitive.Root
       className={cn("aui-root aui-thread-root bg-background @container flex h-full flex-col", className)}
       style={{
-        ["--thread-max-width"]: "44rem",
+        ["--thread-max-width"]: "52rem",
         ["--composer-bg"]: "var(--color-card)",
         ["--composer-radius"]: "1.5rem",
         ["--composer-padding"]: "8px",
       }}>
       <ThreadPrimitive.Viewport
-        turnAnchor="top"
+        // Bottom anchoring keeps the early thread in natural reading order.
+        // assistant-ui follows new content only while the user remains at the
+        // bottom, so an intentional upward scroll is never overridden.
+        turnAnchor="bottom"
+        autoScroll
+        scrollToBottomOnRunStart={false}
         data-slot="aui_thread-viewport"
-        className="relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth">
+        className="relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll">
         <div
           className={cn(
             "mx-auto flex w-full max-w-(--thread-max-width) flex-1 flex-col px-4 pt-4",
@@ -147,6 +153,7 @@ const ThreadRoot = ({ isEmpty, className = "" }) => {
                 "sticky bottom-0 mt-auto rounded-t-(--composer-radius)"
             )}>
             <ThreadFollowupSuggestions />
+            {ThinkingComponent && <ThinkingComponent />}
             <ComposerComponent />
             <AuiIf condition={(s) => isNewChatView(s) && s.composer.isEmpty}>
               <ThreadSuggestions />
