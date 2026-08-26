@@ -33,10 +33,10 @@ import {
   isPaymentSelected,
   selectBookingItinerary,
 } from "./components/scout/booking/booking-review-session";
-import bangkokBtsBackground from "../../assets/2 Bangkok BTS.mp4";
-import hongKongBackground from "../../assets/2 Hong Kong.mp4";
-import kyotoBackground from "../../assets/2 Kyoto.mp4";
-import seoulBackground from "../../assets/2 Seoul.mp4";
+import bangkokBtsBackground from "../assets/2 Bangkok BTS.mp4";
+import hongKongBackground from "../assets/2 Hong Kong.mp4";
+import kyotoBackground from "../assets/2 Kyoto.mp4";
+import seoulBackground from "../assets/2 Seoul.mp4";
 import "./styles.css";
 
 const BACKGROUND_VIDEOS = [
