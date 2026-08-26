@@ -1,4 +1,4 @@
-import priceDisplay from "../../shared/price-display.cjs";
+import priceDisplay from "../../server/shared/price-display.cjs";
 
 const { formatDisplayPrice } = priceDisplay;
 

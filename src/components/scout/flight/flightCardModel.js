@@ -1,3 +1,7 @@
+import priceDisplay from "../../../../server/shared/price-display.cjs";
+
+const { formatDisplayPrice } = priceDisplay;
+
 const formatDuration = (minutes) => {
   const total = Number(minutes);
 
@@ -119,6 +123,3 @@ export function toFlightCardModel(itinerary) {
       itinerary.routingIdentifier || null,
   };
 }
-import priceDisplay from "../../../../shared/price-display.cjs";
-
-const { formatDisplayPrice } = priceDisplay;

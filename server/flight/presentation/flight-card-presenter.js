@@ -3,7 +3,7 @@ const {
 } = require("../../trip/location-resolver");
 const {
   formatDisplayPrice
-} = require("../../../shared/price-display.cjs");
+} = require("../../shared/price-display.cjs");
 
 function parseAtlasDateTime(value) {
   const digits = String(value || "").replace(/\D/g, "");

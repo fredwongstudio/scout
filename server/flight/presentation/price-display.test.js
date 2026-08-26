@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { formatDisplayPrice } = require("../../../shared/price-display.cjs");
+const { formatDisplayPrice } = require("../../shared/price-display.cjs");
 const { presentFlightCard } = require("./flight-card-presenter");
 
 assert.equal(formatDisplayPrice("USD", 873.53), "US$874");
