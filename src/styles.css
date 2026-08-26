@@ -504,6 +504,15 @@ body{
   .scout-page{
     --scout-mobile-header-space:calc(62px + env(safe-area-inset-top));
     --scout-mobile-footer-space:calc(42px + env(safe-area-inset-bottom));
+    height:var(--scout-visible-viewport-height,100dvh);
+  }
+
+  .scout-page[data-keyboard-open="true"]{
+    --scout-mobile-footer-space:0px;
+  }
+
+  .scout-page[data-keyboard-open="true"] .scout-footer{
+    display:none;
   }
 
   /* The header, chat, and footer are three distinct mobile layout zones.

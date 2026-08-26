@@ -211,6 +211,49 @@ function ScoutChat() {
 
 function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceOpen, onContinueBooking, onIdentityChange, onContinueToPayment, onPaymentChange, onContinueToReview, onAuthorize, onBackFromBooking, onRevalidationComplete, onChangePayment, onExecutionChange, onReturnToReview, onViewBooking, onViewTrip, onBackToConfirmation, onDone }) {
   const [isHowToTestOpen, setIsHowToTestOpen] = useState(false);
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    const visualViewport = window.visualViewport;
+    const mobileViewport = window.matchMedia("(max-width: 620px)");
+
+    if (!page || !visualViewport) {
+      return undefined;
+    }
+
+    const updateVisibleViewportHeight = () => {
+      if (!mobileViewport.matches) {
+        page.style.removeProperty("--scout-visible-viewport-height");
+        page.removeAttribute("data-keyboard-open");
+        return;
+      }
+
+      page.style.setProperty(
+        "--scout-visible-viewport-height",
+        `${Math.round(visualViewport.height)}px`
+      );
+
+      if (visualViewport.height < window.innerHeight) {
+        page.setAttribute("data-keyboard-open", "true");
+      } else {
+        page.removeAttribute("data-keyboard-open");
+      }
+    };
+
+    updateVisibleViewportHeight();
+    visualViewport.addEventListener("resize", updateVisibleViewportHeight);
+    visualViewport.addEventListener("scroll", updateVisibleViewportHeight);
+    mobileViewport.addEventListener("change", updateVisibleViewportHeight);
+
+    return () => {
+      visualViewport.removeEventListener("resize", updateVisibleViewportHeight);
+      visualViewport.removeEventListener("scroll", updateVisibleViewportHeight);
+      mobileViewport.removeEventListener("change", updateVisibleViewportHeight);
+      page.style.removeProperty("--scout-visible-viewport-height");
+      page.removeAttribute("data-keyboard-open");
+    };
+  }, []);
 
   useEffect(() => {
     if (!isHowToTestOpen) return undefined;
@@ -224,7 +267,7 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
   }, [isHowToTestOpen]);
 
   return (
-    <div className="scout-page">
+    <div ref={pageRef} className="scout-page">
       <RotatingBackground />
 
       <div className="scout-video-overlay" />
