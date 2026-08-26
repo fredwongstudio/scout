@@ -37,7 +37,7 @@ if (!isPublicDeployment) {
   );
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const openai = new OpenAI();
 
 const travelExtractionSchema = z.object({
@@ -690,6 +690,6 @@ normalizeFlights(data)
 });
 }
 
-app.listen(PORT, () => {
-  console.log(`SCOUT Atlas server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`SCOUT Atlas server running on port ${PORT}`);
 });
