@@ -33,19 +33,20 @@ import {
   isPaymentSelected,
   selectBookingItinerary,
 } from "./components/scout/booking/booking-review-session";
-import bangkokBackground from "../../assets/bangkok1.mp4";
-import tokyoBackground from "../../assets/tokyo.mp4";
-import seoulBackground from "../../assets/seoul.mp4";
-import kualaLumpurBackground from "../../assets/kuala-lumpur.mp4";
+import bangkokBtsBackground from "../../assets/2 Bangkok BTS.mp4";
+import hongKongBackground from "../../assets/2 Hong Kong.mp4";
+import kyotoBackground from "../../assets/2 Kyoto.mp4";
+import seoulBackground from "../../assets/2 Seoul.mp4";
 import "./styles.css";
 
 const BACKGROUND_VIDEOS = [
-  bangkokBackground,
-  tokyoBackground,
+  bangkokBtsBackground,
+  hongKongBackground,
+  kyotoBackground,
   seoulBackground,
-  kualaLumpurBackground,
 ];
-const BACKGROUND_DISPLAY_MS = 14_000;
+const BACKGROUND_VIDEO_START_OFFSETS = [1.75, 0, 0, 0];
+const BACKGROUND_DISPLAY_MS = 5_000;
 
 function RotatingBackground() {
   const videoRefs = useRef([]);
@@ -53,13 +54,22 @@ function RotatingBackground() {
   const [layerIndexes, setLayerIndexes] = useState([0, 1]);
   const [pendingLayer, setPendingLayer] = useState(null);
 
+  const applyStartOffset = (layer) => {
+    const video = videoRefs.current[layer];
+    const startOffset = BACKGROUND_VIDEO_START_OFFSETS[layerIndexes[layer]];
+
+    if (video && startOffset > 0) {
+      video.currentTime = startOffset;
+    }
+  };
+
   const showPendingLayer = () => {
     if (pendingLayer === null) return;
 
     const video = videoRefs.current[pendingLayer];
     if (!video || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
 
-    video.currentTime = 0;
+    video.currentTime = BACKGROUND_VIDEO_START_OFFSETS[layerIndexes[pendingLayer]];
     video.play().catch(() => {});
     setVisibleLayer(pendingLayer);
     setPendingLayer(null);
@@ -99,6 +109,7 @@ function RotatingBackground() {
           preload="auto"
           src={BACKGROUND_VIDEOS[layerIndexes[layer]]}
           aria-hidden="true"
+          onLoadedMetadata={() => applyStartOffset(layer)}
           onCanPlay={showPendingLayer}
         />
       ))}
@@ -150,9 +161,14 @@ function ScoutComposer() {
 
 function EmptyComposer() {
   return (
-    <div className="scout-empty-composer">
-      <ScoutComposer />
-    </div>
+    <>
+      <div className="scout-empty-composer">
+        <ScoutComposer />
+      </div>
+      <div className="scout-composer-descriptor">
+        Agentic Commerce Flight Booking Prototype
+      </div>
+    </>
   );
 }
 
@@ -194,6 +210,19 @@ function ScoutChat() {
 }
 
 function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceOpen, onContinueBooking, onIdentityChange, onContinueToPayment, onPaymentChange, onContinueToReview, onAuthorize, onBackFromBooking, onRevalidationComplete, onChangePayment, onExecutionChange, onReturnToReview, onViewBooking, onViewTrip, onBackToConfirmation, onDone }) {
+  const [isHowToTestOpen, setIsHowToTestOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isHowToTestOpen) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setIsHowToTestOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isHowToTestOpen]);
+
   return (
     <div className="scout-page">
       <RotatingBackground />
@@ -213,6 +242,15 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
         onClick={onNewTrip}
       >
         New Trip
+      </button>
+      <button
+        type="button"
+        className="scout-how-to-test-trigger"
+        onClick={() => setIsHowToTestOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={isHowToTestOpen}
+      >
+        How to test
       </button>
 
       <main className="scout-main">
@@ -267,7 +305,7 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
               <h1>So... what's the plan?</h1>
               <p>
                 <strong>
-                  SCOUT, your travel bestie who helps you travel better, not just travel cheaper.
+                  SCOUT, your AI travel bestie who helps you travel better, not just travel cheaper.
                 </strong>
               </p>
             </section>
@@ -281,8 +319,44 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
           © 2026 Fred Wong. All rights reserved. · {" "}
           <a href="mailto:fredwongstudio@gmail.com">fredwongstudio@gmail.com</a>
         </div>
-        <div>Agentic Commerce Prototype · Sandbox flight inventory · Booking and payment are simulated</div>
+        <div>Sandbox flight inventory · Booking and payment are simulated</div>
       </footer>
+      {isHowToTestOpen && (
+        <div
+          className="scout-how-to-test-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setIsHowToTestOpen(false);
+          }}
+        >
+          <section
+            className="scout-how-to-test-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="scout-how-to-test-title"
+          >
+            <button
+              type="button"
+              className="scout-how-to-test-close"
+              onClick={() => setIsHowToTestOpen(false)}
+              aria-label="Close how to test"
+            >
+              ×
+            </button>
+            <h2 id="scout-how-to-test-title">How to test SCOUT</h2>
+            <p>
+              SCOUT is an Agentic Commerce Flight Booking Prototype exploring how an AI travel agent can take you from conversation to booking.
+            </p>
+            <h3>Try the full journey</h3>
+            <p>
+              Start with a return flight from Singapore to Tokyo and let SCOUT guide you through the rest.
+            </p>
+            <p>Feel free to try other destinations and airports too.</p>
+            <p className="scout-how-to-test-note">
+              Sandbox flight inventory · Booking and payment are simulated.
+            </p>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
