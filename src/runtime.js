@@ -1,22 +1,14 @@
 import { useRef } from "react";
 import { useLocalRuntime } from "@assistant-ui/react";
 
-export async function resetActiveConversation({
-  conversationId,
+export function resetActiveConversation({
+  runtime,
   clearConversationId,
-  fetchImpl = fetch
 }) {
-  try {
-    await fetchImpl("/api/reset", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ conversationId })
-    });
-  } finally {
-    clearConversationId();
-  }
+  hardResetLocalConversation({
+    runtime,
+    clearConversationId,
+  });
 }
 
 export function hardResetLocalConversation({
@@ -127,7 +119,7 @@ export const useScoutRuntime = () => {
     },
     resetConversation() {
       return resetActiveConversation({
-        conversationId: conversationIdRef.current,
+        runtime,
         clearConversationId
       });
     },

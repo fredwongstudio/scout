@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/chat-v2",
+      "destination": "https://scout-production-4daa.up.railway.app/api/chat-v2"
+    }
+  ]
+}

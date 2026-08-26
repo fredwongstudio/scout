@@ -6,36 +6,31 @@ import {
 } from "./runtime.js";
 
 let activeConversationId = "conversation_trip_a";
-let request;
+let resetThreadCount = 0;
+let resetFetchCalls = 0;
 
-await resetActiveConversation({
-  conversationId: activeConversationId,
+resetActiveConversation({
+  runtime: {
+    thread: {
+      reset() {
+        resetThreadCount += 1;
+      },
+    },
+  },
   clearConversationId() {
     activeConversationId = null;
   },
-  async fetchImpl(url, options) {
-    request = { url, options };
-
-    return {
-      ok: true
-    };
-  }
+  fetchImpl() {
+    resetFetchCalls += 1;
+  },
 });
 
-assert.equal(request.url, "/api/reset");
-assert.equal(request.options.method, "POST");
-assert.equal(
-  request.options.headers["Content-Type"],
-  "application/json"
-);
-assert.deepEqual(
-  JSON.parse(request.options.body),
-  { conversationId: "conversation_trip_a" }
-);
+assert.equal(resetThreadCount, 1);
+assert.equal(resetFetchCalls, 0);
 assert.equal(activeConversationId, null);
 
 console.log(
-  "PASS: New Trip sends and clears the active chat-v2 conversation ID"
+  "PASS: New Trip clears the local thread and active chat-v2 conversation ID"
 );
 
 let localConversationId = "conversation_booking_a";
