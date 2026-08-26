@@ -191,6 +191,14 @@ function presentFlightCard(itinerary, options = {}) {
     airline:
       itinerary.airline || null,
 
+    airlineCode:
+      itinerary.airlineCode ||
+      itinerary.airline ||
+      null,
+
+    airlineName:
+      itinerary.airlineName || null,
+
     fare:
       itinerary.fare ||
       itinerary.cabin ||

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import BookingJourney from "./BookingJourney";
+import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
 const REVALIDATION_DELAY_MS = 450;
 
@@ -38,7 +39,7 @@ export default function BookingReview({ session, onContinue, onBack, onRevalidat
         <header className="scout-booking-itinerary-header">
           <div className="scout-booking-itinerary-label">SELECTED FLIGHT</div>
           <div className="scout-booking-airline">
-            {itinerary.airline || "Airline unavailable"}
+            {formatAirlineDisplay(itinerary)}
             {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
           </div>
         </header>

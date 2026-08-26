@@ -1,3 +1,8 @@
+const {
+  getAirlineName,
+  normalizeAirlineCode
+} = require("../airline/airline-repository");
+
 function normalizeSegments(segments) {
   const safeSegments =
     Array.isArray(segments) ? segments : [];
@@ -77,6 +82,10 @@ function normalizeRoundTripFlights(atlasResponse) {
           }
         : null;
 
+    const airlineCode = normalizeAirlineCode(
+      outbound.segments[0]?.carrier
+    );
+
     return {
       id: routing.fid || null,
       status: "SEARCH_RESULT",
@@ -86,8 +95,10 @@ function normalizeRoundTripFlights(atlasResponse) {
       currency:
         routing.currency || null,
 
-      airline:
-        outbound.segments[0]?.carrier || null,
+      // `airline` remains the legacy code-only compatibility field.
+      airline: airlineCode,
+      airlineCode,
+      airlineName: getAirlineName(airlineCode),
 
       outbound,
       inbound,

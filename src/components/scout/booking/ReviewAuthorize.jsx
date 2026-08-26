@@ -2,6 +2,7 @@ import {
   AUTHORIZATION_STATUSES,
   isPaymentSelected,
 } from "./booking-review-session";
+import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
 function ReviewJourney({ label, journey }) {
   if (!journey) return null;
@@ -52,7 +53,7 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
         {session.summary?.dates && <span className="scout-authorize-meta">{session.summary.dates}</span>}
         <div className="scout-authorize-flight-card">
           <div className="scout-authorize-airline">
-            {itinerary.airline || "Airline unavailable"}
+            {formatAirlineDisplay(itinerary)}
             {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
           </div>
           <ReviewJourney label="OUTBOUND" journey={itinerary.outbound} />

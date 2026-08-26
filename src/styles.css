@@ -293,6 +293,10 @@ body{
   border-radius:2px;
 }
 
+.scout-footer-mobile-copyright{
+  display:none;
+}
+
 .scout-hero{
   position:absolute;
   left:50%;
@@ -334,6 +338,10 @@ body{
   color:rgba(255,255,255,.88);
   font-size:19px;
   line-height:1.42;
+}
+
+.scout-mobile-support-line{
+  display:inline;
 }
 
 /* EMPTY STATE: a real assistant-ui ComposerPrimitive, floating directly
@@ -493,9 +501,22 @@ body{
 }
 
 @media(max-width:620px){
+  .scout-page{
+    --scout-mobile-header-space:calc(62px + env(safe-area-inset-top));
+    --scout-mobile-footer-space:calc(42px + env(safe-area-inset-bottom));
+  }
+
+  /* The header, chat, and footer are three distinct mobile layout zones.
+     Booking panels and the assistant-ui thread live only in the middle zone. */
+  .scout-main{
+    top:var(--scout-mobile-header-space);
+    bottom:var(--scout-mobile-footer-space);
+    overflow:hidden;
+  }
+
   .scout-how-to-test-trigger{
-    top:16px;
-    right:20px;
+    top:calc(14px + env(safe-area-inset-top));
+    right:calc(16px + env(safe-area-inset-right));
     padding:7px 10px;
     font-size:11px;
   }
@@ -510,44 +531,194 @@ body{
   }
 
   .scout-footer{
-    bottom:10px;
+    bottom:calc(7px + env(safe-area-inset-bottom));
     width:calc(100% - 32px);
-    font-size:11px;
+    font-size:9px;
+    line-height:1.25;
+    white-space:nowrap;
+  }
+
+  .scout-footer-desktop-copyright{
+    display:none;
+  }
+
+  .scout-footer-mobile-copyright{
+    display:inline;
   }
 
   .scout-brand{
-    left:24px;
-    top:20px;
+    left:calc(20px + env(safe-area-inset-left));
+    top:calc(18px + env(safe-area-inset-top));
     font-size:24px;
   }
 
   .scout-hero{
-    width:94vw;
-    top:44%;
-    transform:translate(-50%,-42%);
-    gap:10px;
+    width:min(92vw,390px);
+    top:38%;
+    transform:translate(-50%,-50%);
+    gap:6px;
+  }
+
+  .scout-intro h1{
+    width:min(320px,90vw);
+    margin-inline:auto;
+    font-size:clamp(34px,9.2vw,36px);
+    line-height:1.08;
   }
 
   .scout-intro p{
-    font-size:17px;
-    margin-top:10px;
+    width:min(82vw,330px);
+    margin-top:8px;
+    font-size:15px;
+    line-height:1.38;
+  }
+
+  .scout-mobile-support-line{
+    display:block;
+    white-space:nowrap;
   }
 
   .scout-composer-descriptor{
+    margin-top:0;
     font-size:11px;
   }
 
-  .scout-empty-composer,
+  .scout-empty-composer{
+    width:min(90vw,380px);
+  }
+
   .scout-active-thread{
     width:100%;
   }
 
-  .scout-composer{
-    min-height:78px;
+  /* Mobile composer is one compact row: action, message field, send action. */
+  .scout-composer,
+  .scout-thread-footer .scout-composer{
+    display:grid;
+    grid-template-columns:36px minmax(0,1fr) 36px;
+    align-items:center;
+    min-height:58px;
+    height:58px;
+    gap:0;
+    padding:6px 8px;
+  }
+
+  .scout-composer-input{
+    grid-column:2;
+    grid-row:1;
+    position:relative;
+    z-index:1;
+    min-width:0;
+    font-size:12px;
+    min-height:24px;
+    height:24px;
+    max-height:24px;
+    overflow:hidden;
+    overflow-y:hidden;
+    white-space:nowrap;
+    line-height:24px;
+    padding:0;
+  }
+
+  .scout-composer-actions{
+    grid-column:1 / -1;
+    grid-row:1;
+    min-height:36px;
+    display:grid;
+    grid-template-columns:36px minmax(0,1fr) 36px;
+    align-items:center;
+    pointer-events:none;
+  }
+
+  .scout-composer-plus{
+    grid-column:1;
+    grid-row:1;
+    width:36px;
+    height:36px;
+    pointer-events:auto;
+  }
+
+  .scout-composer-send{
+    grid-column:3;
+    grid-row:1;
+    pointer-events:auto;
   }
 
   .scout-active-thread{
     height:min(630px,calc(100dvh - 135px));
+  }
+
+  /* In the active state, the thread flexes inside the protected chat zone
+     instead of using a viewport height that can cross the header or footer. */
+  .scout-hero:has(.scout-active-thread){
+    top:0;
+    height:100%;
+    min-height:0;
+    justify-content:flex-start;
+    transform:translateX(-50%);
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-active-thread{
+    height:auto;
+    min-height:0;
+    flex:1 1 auto;
+  }
+
+  .scout-booking-review,
+  .scout-traveller-identity,
+  .scout-payment-method,
+  .scout-review-authorize,
+  .scout-agent-execution,
+  .scout-booking-confirmation,
+  .scout-trip-details{
+    max-height:100%;
+    margin-top:0;
+  }
+}
+
+/* Keep the complete home composition visible on small phones, while avoiding
+   a fixed-height thread when the virtual keyboard reduces the visual viewport.
+   Modern mobile browsers update `dvh` as the keyboard opens. */
+@media(max-width:620px) and (max-height:740px){
+  .scout-hero{
+    top:36%;
+    gap:5px;
+  }
+
+  .scout-intro p{
+    margin-top:6px;
+  }
+
+  .scout-active-thread{
+    height:min(570px,calc(100dvh - 118px));
+  }
+}
+
+@media(max-width:620px) and (max-height:560px){
+  /* This is the keyboard-sized viewport: preserve the composer and a
+     scrollable conversation first; the introductory hero is non-essential. */
+  .scout-hero{
+    top:57%;
+  }
+
+  .scout-intro,
+  .scout-composer-descriptor,
+  .scout-footer{
+    display:none;
+  }
+
+  .scout-page{
+    --scout-mobile-footer-space:0px;
+  }
+
+  .scout-composer,
+  .scout-thread-footer .scout-composer{
+    min-height:58px;
+    height:58px;
+  }
+
+  .scout-active-thread{
+    height:calc(100dvh - 84px);
   }
 }
 
@@ -746,6 +917,28 @@ body{
     max-width:100%;
     min-width:0;
     margin-inline:0;
+  }
+}
+
+/* Flight-result data is a full-width presentation block, not an ordinary
+   assistant text bubble. Keep the mobile card inside the existing thread
+   padding while allowing it to use that entire lane. */
+@media(max-width:620px){
+  .scout-active-thread [data-slot="aui_assistant-message-root"]:has(.scout-flight-results){
+    min-width:0;
+  }
+
+  .scout-active-thread [data-slot="aui_assistant-message-content"]:has(.scout-flight-results){
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    align-self:stretch;
+  }
+
+  .scout-active-thread .scout-flight-results{
+    width:100%;
+    max-width:100%;
+    min-width:0;
   }
 }
 
@@ -2215,6 +2408,20 @@ body{
   .scout-manual-identity-fields,
   .scout-payment-options {
     grid-template-columns: 1fr;
+  }
+
+  /* These rules follow the booking-specific mobile sizing above so the
+     actual in-app surfaces, unlike standalone dev previews, remain bounded
+     by `.scout-main`'s protected header/chat/footer zone. */
+  .scout-main .scout-booking-review,
+  .scout-main .scout-traveller-identity,
+  .scout-main .scout-payment-method,
+  .scout-main .scout-review-authorize,
+  .scout-main .scout-agent-execution,
+  .scout-main .scout-booking-confirmation,
+  .scout-main .scout-trip-details {
+    max-height: 100%;
+    margin-top: 0;
   }
 
 }

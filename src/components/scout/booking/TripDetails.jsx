@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isValidConfirmationEmail } from "./trip-details-utils";
+import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
 function getDestination(route) {
   return route?.split(" → ").at(-1) || "your";
@@ -106,7 +107,7 @@ export default function TripDetails({ session, onBack }) {
         {session.summary?.route && <strong className="scout-trip-route">{session.summary.route}</strong>}
         <div className="scout-trip-flight-card">
           <div className="scout-trip-airline">
-            {itinerary.airline || "Airline unavailable"}
+            {formatAirlineDisplay(itinerary)}
             {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
           </div>
           <TripJourney title="OUTBOUND" journey={itinerary.outbound} />

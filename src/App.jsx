@@ -305,7 +305,12 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
               <h1>So... what's the plan?</h1>
               <p>
                 <strong>
-                  SCOUT, your AI travel bestie who helps you travel better, not just travel cheaper.
+                  <span className="scout-mobile-support-line">
+                    SCOUT, your AI travel bestie who helps
+                  </span>{" "}
+                  <span className="scout-mobile-support-line">
+                    you travel better, not just travel cheaper.
+                  </span>
                 </strong>
               </p>
             </section>
@@ -316,7 +321,12 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
       </main>
       <footer className="scout-footer">
         <div>
-          © 2026 Fred Wong. All rights reserved. · {" "}
+          <span className="scout-footer-desktop-copyright">
+            © 2026 Fred Wong. All rights reserved. · {" "}
+          </span>
+          <span className="scout-footer-mobile-copyright">
+            © 2026 Fred Wong · {" "}
+          </span>
           <a href="mailto:fredwongstudio@gmail.com">fredwongstudio@gmail.com</a>
         </div>
         <div>Sandbox flight inventory · Booking and payment are simulated</div>

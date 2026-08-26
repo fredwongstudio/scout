@@ -1,3 +1,5 @@
+import { formatAirlineDisplay } from "./airlineDisplay";
+
 function Journey({ journey }) {
   if (!journey) return null;
 
@@ -54,7 +56,7 @@ export default function FlightCard({ data, onSelect }) {
             {data.label || "FLIGHT OPTION"}
           </div>
           <div className="scout-flight-airline">
-            {data.airline || "Airline unavailable"}
+            {formatAirlineDisplay(data)}
             {data.flightIdentifier
               ? ` · ${data.flightIdentifier}`
               : ""}

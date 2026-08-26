@@ -1,4 +1,5 @@
 import BookingJourney from "./BookingJourney";
+import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
 function getDestination(route) {
   return route?.split(" → ").at(-1) || "your destination";
@@ -33,7 +34,7 @@ export default function BookingConfirmation({ session, onViewTrip, onDone }) {
         <div className="scout-confirmation-section-title">FLIGHT DETAILS</div>
         <div className="scout-confirmation-flight">
           <strong>
-            {itinerary.airline || "Airline unavailable"}
+            {formatAirlineDisplay(itinerary)}
             {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
           </strong>
           <BookingJourney fallbackLabel="OUTBOUND" journey={itinerary.outbound} />

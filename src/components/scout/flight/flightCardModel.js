@@ -61,7 +61,8 @@ const formatPrice = (currency, value) => {
 
 const mapSegment = (segment) => ({
   flightNumber: segment?.flightNumber || null,
-  airline: segment?.carrier || null,
+  airlineCode: segment?.airlineCode || segment?.carrier || null,
+  airlineName: segment?.airlineName || null,
   from: segment?.depAirport || null,
   to: segment?.arrAirport || null,
   departure: formatTime(segment?.depTime),
@@ -96,7 +97,10 @@ export function toFlightCardModel(itinerary) {
   return {
     id: itinerary.id || null,
 
+    // `airline` is retained as the legacy code-only compatibility field.
     airline: itinerary.airline || null,
+    airlineCode: itinerary.airlineCode || itinerary.airline || null,
+    airlineName: itinerary.airlineName || null,
 
     currency: itinerary.currency || "USD",
 
