@@ -1,0 +1,14 @@
+{
+  "name": "scout-backend",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node atlas.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "openai": "^7.5.0",
+    "zod": "^4.4.3"
+  }
+}

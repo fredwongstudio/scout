@@ -1,0 +1,9 @@
+const TRIP_STATUS = Object.freeze({
+  INCOMPLETE: "INCOMPLETE",
+  READY_FOR_CONFIRMATION: "READY_FOR_CONFIRMATION",
+  CONFIRMED: "CONFIRMED"
+});
+
+module.exports = {
+  TRIP_STATUS
+};
