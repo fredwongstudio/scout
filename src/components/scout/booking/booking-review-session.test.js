@@ -44,13 +44,13 @@ const summary = {
 const cardOne = {
   id: "atlas-itinerary-one",
   flightIdentifier: "TR882",
-  price: { amount: "US$1,739.50" },
+  price: { amount: "US$1,740" },
 };
 
 const cardTwo = {
   id: "atlas-itinerary-two",
   flightIdentifier: "SQ012",
-  price: { amount: "US$1,865.00" },
+  price: { amount: "US$1,865" },
 };
 
 test("creates a booking session from the exact selected first card", () => {
@@ -59,7 +59,7 @@ test("creates a booking session from the exact selected first card", () => {
   assert.equal(session.summary, summary);
   assert.equal(session.itinerary, cardOne);
   assert.equal(session.itinerary.id, "atlas-itinerary-one");
-  assert.equal(session.itinerary.price.amount, "US$1,739.50");
+  assert.equal(session.itinerary.price.amount, "US$1,740");
   assert.equal(session.stage, "REVIEW");
   assert.equal(session.offerRevalidated, false);
   assert.deepEqual(session.identity, {
@@ -142,7 +142,7 @@ test("payment selection is UI-only, singular, and leaves the selected price unch
   assert.notEqual(wallet.method, card.method);
   assert.equal(createSelectedPayment(PAYMENT_METHODS.SAVED_CARD).method, PAYMENT_METHODS.SAVED_CARD);
   assert.equal(createSelectedPayment(PAYMENT_METHODS.SCOUT_WALLET_USDC).method, PAYMENT_METHODS.SCOUT_WALLET_USDC);
-  assert.equal(cardOne.price.amount, "US$1,739.50");
+  assert.equal(cardOne.price.amount, "US$1,740");
 });
 
 test("authorization binds only to the exact selected itinerary price context", () => {
@@ -156,7 +156,7 @@ test("authorization binds only to the exact selected itinerary price context", (
 
   assert.equal(initial.status, AUTHORIZATION_STATUSES.NOT_AUTHORIZED);
   assert.equal(authorized.status, AUTHORIZATION_STATUSES.AUTHORIZED);
-  assert.equal(authorized.amount, "US$1,739.50");
+  assert.equal(authorized.amount, "US$1,740");
   assert.equal(authorized.currency, "US$");
   assert.equal(authorized.itineraryId, "atlas-itinerary-one");
   assert.deepEqual(authorized.travellerIds, ["demo-adult-1", "demo-adult-2", "demo-child-3"]);
@@ -234,7 +234,7 @@ test("preserves a distinct second-card identity and price", () => {
 
   assert.equal(session.itinerary, cardTwo);
   assert.equal(session.itinerary.id, "atlas-itinerary-two");
-  assert.equal(session.itinerary.price.amount, "US$1,865.00");
+  assert.equal(session.itinerary.price.amount, "US$1,865");
 });
 
 test("does not fabricate unavailable commercial details in the booking session", () => {
@@ -243,7 +243,7 @@ test("does not fabricate unavailable commercial details in the booking session",
   assert.equal(session.itinerary.baggage, undefined);
   assert.equal(session.itinerary.fareConditions, undefined);
   assert.equal(session.itinerary.taxAmount, undefined);
-  assert.equal(session.itinerary.price.amount, "US$1,739.50");
+  assert.equal(session.itinerary.price.amount, "US$1,740");
 });
 
 test("does not create a booking session without an itinerary identity", () => {

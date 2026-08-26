@@ -1,12 +1,6 @@
-const formatPrice = (currency, value) => {
-  const amount = Number(value);
+import priceDisplay from "../../shared/price-display.cjs";
 
-  if (!Number.isFinite(amount)) {
-    return "Price unavailable";
-  }
-
-  return `${currency || "USD"} ${amount.toFixed(2)}`;
-};
+const { formatDisplayPrice } = priceDisplay;
 
 const formatStops = (stops) => {
   const count = Number(stops || 0);
@@ -88,7 +82,7 @@ export default function FlightResultCard({ data }) {
           </div>
 
           <div className="text-xl font-semibold">
-            {formatPrice(currency, totalPrice)}
+            {formatDisplayPrice(currency, totalPrice) || "Price unavailable"}
           </div>
         </div>
 

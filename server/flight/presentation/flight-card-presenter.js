@@ -1,6 +1,9 @@
 const {
   getLocationDisplayName
 } = require("../../trip/location-resolver");
+const {
+  formatDisplayPrice
+} = require("../../../shared/price-display.cjs");
 
 function parseAtlasDateTime(value) {
   const digits = String(value || "").replace(/\D/g, "");
@@ -82,17 +85,6 @@ function formatTravellers(counts = {}) {
   }
 
   return parts.join(" · ");
-}
-
-function formatPrice(currency, value) {
-  const amount = Number(value);
-
-  if (!Number.isFinite(amount)) return null;
-
-  return new Intl.NumberFormat("en-SG", {
-    style: "currency",
-    currency: currency || "USD"
-  }).format(amount);
 }
 
 function formatTripDate(value) {
@@ -225,14 +217,14 @@ function presentFlightCard(itinerary, options = {}) {
 
     price: {
       amount:
-        formatPrice(
+        formatDisplayPrice(
           itinerary.currency,
           totalPrice
         ),
       perPersonAmount:
         perPersonPrice == null
           ? null
-          : formatPrice(
+          : formatDisplayPrice(
               itinerary.currency,
               perPersonPrice
             ),

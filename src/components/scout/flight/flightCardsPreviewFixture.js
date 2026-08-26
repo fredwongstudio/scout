@@ -33,8 +33,8 @@ export const previewFlightResult = {
       },
       travellers: "2 adults · 1 child",
       price: {
-        perPersonAmount: "US$579.83",
-        amount: "US$1,739.50",
+        perPersonAmount: "US$580",
+        amount: "US$1,740",
         label: "Total trip price"
       },
       action: "Select flight"
@@ -67,8 +67,8 @@ export const previewFlightResult = {
       },
       travellers: "2 adults · 1 child",
       price: {
-        perPersonAmount: "US$621.67",
-        amount: "US$1,865.00",
+        perPersonAmount: "US$622",
+        amount: "US$1,865",
         label: "Total trip price"
       },
       action: "Select flight"

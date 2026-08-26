@@ -46,19 +46,6 @@ const formatTime = (value) => {
   }).format(date);
 };
 
-const formatPrice = (currency, value) => {
-  const amount = Number(value);
-
-  if (!Number.isFinite(amount)) {
-    return null;
-  }
-
-  return new Intl.NumberFormat("en-SG", {
-    style: "currency",
-    currency: currency || "USD",
-  }).format(amount);
-};
-
 const mapSegment = (segment) => ({
   flightNumber: segment?.flightNumber || null,
   airlineCode: segment?.airlineCode || segment?.carrier || null,
@@ -118,7 +105,7 @@ export function toFlightCardModel(itinerary) {
       amount: Number.isFinite(Number(totalPrice))
         ? Number(totalPrice)
         : null,
-      formatted: formatPrice(
+      formatted: formatDisplayPrice(
         itinerary.currency,
         totalPrice
       ),
@@ -132,3 +119,6 @@ export function toFlightCardModel(itinerary) {
       itinerary.routingIdentifier || null,
   };
 }
+import priceDisplay from "../../../../shared/price-display.cjs";
+
+const { formatDisplayPrice } = priceDisplay;
