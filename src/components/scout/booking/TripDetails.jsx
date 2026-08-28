@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  formatSimulatedUsdcAmount,
+  isScoutWalletPayment,
+} from "./booking-review-session";
 import { isValidConfirmationEmail } from "./trip-details-utils";
 import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
@@ -33,6 +37,9 @@ function TripJourney({ journey, title }) {
 
 export default function TripDetails({ session, onBack }) {
   const itinerary = session.itinerary;
+  const simulatedUsdcAmount = isScoutWalletPayment(session.payment)
+    ? formatSimulatedUsdcAmount(itinerary?.price?.amount)
+    : null;
   const [emailPanelOpen, setEmailPanelOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [emailStatus, setEmailStatus] = useState("IDLE");
@@ -134,7 +141,10 @@ export default function TripDetails({ session, onBack }) {
           {session.payment.display?.label || "Payment method unavailable"}
           {session.payment.display?.asset ? ` · ${session.payment.display.asset}` : ""}
         </strong>
-        <em>{itinerary.price?.amount || "Price unavailable"}</em>
+        <em>
+          {itinerary.price?.amount || "Price unavailable"}
+          {simulatedUsdcAmount ? <span className="scout-simulated-usdc"> = {simulatedUsdcAmount}</span> : null}
+        </em>
         <span>Demo transaction</span>
       </section>
 

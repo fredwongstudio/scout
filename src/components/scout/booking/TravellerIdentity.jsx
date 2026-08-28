@@ -178,7 +178,7 @@ export default function TravellerIdentity({ session, onIdentityChange, onContinu
         disabled={!isIdentityReadyForPayment(identity, expectedTravellers)}
         onClick={() => onContinue?.()}
       >
-        Continue to payment <span aria-hidden="true">→</span>
+        Continue to confirmation <span aria-hidden="true">→</span>
       </button>
     </section>
   );

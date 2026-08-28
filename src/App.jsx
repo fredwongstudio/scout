@@ -14,6 +14,7 @@ import { useScoutRuntime } from "./runtime";
 import ScoutDataUI from "./components/ScoutDataUI";
 import BookingReview from "./components/scout/booking/BookingReview";
 import TravellerIdentity from "./components/scout/booking/TravellerIdentity";
+import FinalConfirmation from "./components/scout/booking/FinalConfirmation";
 import PaymentMethod from "./components/scout/booking/PaymentMethod";
 import ReviewAuthorize from "./components/scout/booking/ReviewAuthorize";
 import AgentExecution from "./components/scout/booking/AgentExecution";
@@ -27,6 +28,7 @@ import {
   canViewBooking,
   canViewTrip,
   createCompletionAcknowledgement,
+  getNextPreAuthorizationStage,
   getPreviousPreAuthorizationStage,
   BOOKING_VIEWS,
   isIdentityReadyForPayment,
@@ -47,6 +49,7 @@ const BACKGROUND_VIDEOS = [
 ];
 const BACKGROUND_VIDEO_START_OFFSETS = [1.75, 0, 0, 0];
 const BACKGROUND_DISPLAY_MS = 5_000;
+const MOBILE_THREAD_BOTTOM_THRESHOLD = 48;
 
 function RotatingBackground() {
   const videoRefs = useRef([]);
@@ -121,7 +124,7 @@ function ScoutComposer() {
   return (
     <ComposerPrimitive.Root className="scout-composer">
       <ComposerPrimitive.Input
-        placeholder="Where do we feel like going next..."
+        placeholder="Which city are we going?"
         className="scout-composer-input"
         rows={1}
         autoFocus
@@ -187,9 +190,82 @@ function ScoutThinking() {
   );
 }
 
-function ActiveThread() {
+function ActiveThread({ keyboardOpen }) {
+  const threadRef = useRef(null);
+  const keyboardOpenRef = useRef(keyboardOpen);
+  const previousKeyboardOpenRef = useRef(keyboardOpen);
+  const wasNearBottomRef = useRef(true);
+  const userInterruptedAnchorRef = useRef(false);
+
+  useEffect(() => {
+    keyboardOpenRef.current = keyboardOpen;
+  }, [keyboardOpen]);
+
+  useEffect(() => {
+    const thread = threadRef.current;
+    const viewport = thread?.querySelector('[data-slot="aui_thread-viewport"]');
+
+    if (!viewport) return undefined;
+
+    const updateNearBottom = () => {
+      if (keyboardOpenRef.current) return;
+
+      const distanceFromBottom =
+        viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight;
+      wasNearBottomRef.current = distanceFromBottom <= MOBILE_THREAD_BOTTOM_THRESHOLD;
+    };
+
+    const noteManualViewportInteraction = () => {
+      if (keyboardOpenRef.current) userInterruptedAnchorRef.current = true;
+    };
+
+    updateNearBottom();
+    viewport.addEventListener("scroll", updateNearBottom, { passive: true });
+    viewport.addEventListener("pointerdown", noteManualViewportInteraction, { passive: true });
+    viewport.addEventListener("touchstart", noteManualViewportInteraction, { passive: true });
+    viewport.addEventListener("wheel", noteManualViewportInteraction, { passive: true });
+
+    return () => {
+      viewport.removeEventListener("scroll", updateNearBottom);
+      viewport.removeEventListener("pointerdown", noteManualViewportInteraction);
+      viewport.removeEventListener("touchstart", noteManualViewportInteraction);
+      viewport.removeEventListener("wheel", noteManualViewportInteraction);
+    };
+  }, []);
+
+  useEffect(() => {
+    const wasKeyboardOpen = previousKeyboardOpenRef.current;
+    previousKeyboardOpenRef.current = keyboardOpen;
+
+    if (!keyboardOpen || wasKeyboardOpen || !wasNearBottomRef.current) {
+      return undefined;
+    }
+
+    const viewport = threadRef.current?.querySelector(
+      '[data-slot="aui_thread-viewport"]',
+    );
+    if (!viewport) return undefined;
+
+    userInterruptedAnchorRef.current = false;
+    let secondFrame = null;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        if (!keyboardOpenRef.current || userInterruptedAnchorRef.current) return;
+
+        // Wait for the Visual Viewport-driven layout to settle, then preserve
+        // the latest conversational context without changing normal auto-scroll.
+        viewport.scrollTop = viewport.scrollHeight;
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [keyboardOpen]);
+
   return (
-    <section className="scout-active-thread" aria-label="SCOUT conversation">
+    <section ref={threadRef} className="scout-active-thread" aria-label="SCOUT conversation">
       <Thread
         className="scout-thread-root"
         components={{
@@ -201,16 +277,17 @@ function ActiveThread() {
   );
 }
 
-function ScoutChat() {
+function ScoutChat({ keyboardOpen }) {
   const isEmpty = useAuiState(
     (state) => state.thread.messages.length === 0 && !state.thread.isLoading
   );
 
-  return isEmpty ? <EmptyComposer /> : <ActiveThread />;
+  return isEmpty ? <EmptyComposer /> : <ActiveThread keyboardOpen={keyboardOpen} />;
 }
 
-function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceOpen, onContinueBooking, onIdentityChange, onContinueToPayment, onPaymentChange, onContinueToReview, onAuthorize, onBackFromBooking, onRevalidationComplete, onChangePayment, onExecutionChange, onReturnToReview, onViewBooking, onViewTrip, onBackToConfirmation, onDone }) {
+function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onContinueBooking, onIdentityChange, onContinueToFinalConfirmation, onContinueToPayment, onPaymentChange, onContinueToReview, onAuthorize, onBackFromBooking, onRevalidationComplete, onChangePayment, onExecutionChange, onReturnToReview, onViewBooking, onViewTrip, onBackToConfirmation, onDone }) {
   const [isHowToTestOpen, setIsHowToTestOpen] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -225,7 +302,9 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
     const updateVisibleViewportHeight = () => {
       if (!mobileViewport.matches) {
         page.style.removeProperty("--scout-visible-viewport-height");
+        page.style.removeProperty("--scout-visible-viewport-offset-top");
         page.removeAttribute("data-keyboard-open");
+        setIsKeyboardOpen(false);
         return;
       }
 
@@ -233,12 +312,18 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
         "--scout-visible-viewport-height",
         `${Math.round(visualViewport.height)}px`
       );
+      page.style.setProperty(
+        "--scout-visible-viewport-offset-top",
+        `${Math.round(visualViewport.offsetTop || 0)}px`
+      );
 
-      if (visualViewport.height < window.innerHeight) {
+      const keyboardOpen = visualViewport.height < window.innerHeight;
+      if (keyboardOpen) {
         page.setAttribute("data-keyboard-open", "true");
       } else {
         page.removeAttribute("data-keyboard-open");
       }
+      setIsKeyboardOpen((current) => current === keyboardOpen ? current : keyboardOpen);
     };
 
     updateVisibleViewportHeight();
@@ -251,6 +336,7 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
       visualViewport.removeEventListener("scroll", updateVisibleViewportHeight);
       mobileViewport.removeEventListener("change", updateVisibleViewportHeight);
       page.style.removeProperty("--scout-visible-viewport-height");
+      page.style.removeProperty("--scout-visible-viewport-offset-top");
       page.removeAttribute("data-keyboard-open");
     };
   }, []);
@@ -274,17 +360,10 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
       <button
         type="button"
         className="scout-brand"
-        onClick={onHardReset}
-        aria-label="SCOUT home — start over"
+        onClick={onResetScout}
+        aria-label="Reset SCOUT"
       >
         SCOUT
-      </button>
-      <button
-        type="button"
-        className="scout-new-trip"
-        onClick={onNewTrip}
-      >
-        New Trip
       </button>
       <button
         type="button"
@@ -327,11 +406,17 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
               onContinue={onContinueToReview}
               onBack={onBackFromBooking}
             />
+          ) : bookingSession.stage === "FINAL_CONFIRMATION" ? (
+            <FinalConfirmation
+              session={bookingSession}
+              onContinue={onContinueToPayment}
+              onBack={onBackFromBooking}
+            />
           ) : bookingSession.stage === "TRAVELLER_IDENTITY" ? (
             <TravellerIdentity
               session={bookingSession}
               onIdentityChange={onIdentityChange}
-              onContinue={onContinueToPayment}
+              onContinue={onContinueToFinalConfirmation}
               onBack={onBackFromBooking}
             />
           ) : (
@@ -352,13 +437,13 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
                     SCOUT, your AI travel bestie who helps
                   </span>{" "}
                   <span className="scout-mobile-support-line">
-                    you travel better, not just travel cheaper.
+                    you book your flights
                   </span>
                 </strong>
               </p>
             </section>
 
-            <ScoutChat />
+            <ScoutChat keyboardOpen={isKeyboardOpen} />
           </div>
         )}
       </main>
@@ -415,34 +500,14 @@ function ScoutShell({ onHardReset, onNewTrip, bookingSession, bookingExperienceO
 }
 
 export default function App() {
-  const [sessionKey, setSessionKey] = useState(0);
   const [bookingSession, setBookingSession] = useState(null);
   const [bookingExperienceOpen, setBookingExperienceOpen] = useState(false);
   const {
     runtime,
-    resetConversation,
-    hardResetConversation,
     appendLocalAssistantMessage,
   } = useScoutRuntime();
 
-  const hardResetHome = () => {
-    setBookingSession(null);
-    setBookingExperienceOpen(false);
-    hardResetConversation();
-  };
-
-  const startNewTrip = async () => {
-    setBookingSession(null);
-    setBookingExperienceOpen(false);
-
-    try {
-      await resetConversation();
-    } catch (error) {
-      console.error("SCOUT reset failed:", error);
-    }
-
-    setSessionKey((key) => key + 1);
-  };
+  const resetScout = () => window.location.reload();
 
   const selectFlight = ({ summary, itinerary }) => {
     setBookingSession((current) =>
@@ -489,15 +554,36 @@ export default function App() {
     });
   };
 
-  const continueToPayment = () => {
+  const continueToFinalConfirmation = () => {
     setBookingSession((current) => {
-      if (!current || !isIdentityReadyForPayment(current.identity, current.itinerary?.travellers)) {
+      if (
+        !current ||
+        current.stage !== "TRAVELLER_IDENTITY" ||
+        !isIdentityReadyForPayment(current.identity, current.itinerary?.travellers)
+      ) {
         return current;
       }
 
       return {
         ...current,
-        stage: "PAYMENT",
+        stage: getNextPreAuthorizationStage(current.stage),
+      };
+    });
+  };
+
+  const continueToPayment = () => {
+    setBookingSession((current) => {
+      if (
+        !current ||
+        current.stage !== "FINAL_CONFIRMATION" ||
+        !isIdentityReadyForPayment(current.identity, current.itinerary?.travellers)
+      ) {
+        return current;
+      }
+
+      return {
+        ...current,
+        stage: getNextPreAuthorizationStage(current.stage),
       };
     });
   };
@@ -513,13 +599,17 @@ export default function App() {
 
   const continueToReview = () => {
     setBookingSession((current) => {
-      if (!current || !isPaymentSelected(current.payment)) {
+      if (
+        !current ||
+        current.stage !== "PAYMENT" ||
+        !isPaymentSelected(current.payment)
+      ) {
         return current;
       }
 
       return {
         ...current,
-        stage: "REVIEW_AUTHORIZE",
+        stage: getNextPreAuthorizationStage(current.stage),
       };
     });
   };
@@ -617,18 +707,17 @@ export default function App() {
 
   return (
     <AssistantRuntimeProvider
-      key={sessionKey}
       runtime={runtime}
     >
       <ScoutDataUI onSelectFlight={selectFlight} />
       <TooltipProvider>
         <ScoutShell
-          onHardReset={hardResetHome}
-          onNewTrip={startNewTrip}
+          onResetScout={resetScout}
           bookingSession={bookingSession}
           bookingExperienceOpen={bookingExperienceOpen}
           onContinueBooking={continueBooking}
           onIdentityChange={updateIdentity}
+          onContinueToFinalConfirmation={continueToFinalConfirmation}
           onContinueToPayment={continueToPayment}
           onPaymentChange={updatePayment}
           onContinueToReview={continueToReview}

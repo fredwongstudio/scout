@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root{
   --lavender:#b99aff;
@@ -21,7 +21,6 @@
   .scout-bg-video,
   .scout-video-overlay,
   .scout-brand,
-  .scout-new-trip,
   .scout-trip-back,
   .scout-trip-actions,
   .scout-trip-email-panel {
@@ -326,7 +325,7 @@ body{
   margin-top:2px;
   color:rgba(255,255,255,.58);
   font-size:12px;
-  font-weight:500;
+  font-weight:700;
   letter-spacing:.08em;
   text-align:center;
   text-transform:uppercase;
@@ -504,6 +503,7 @@ body{
   .scout-page{
     --scout-mobile-header-space:calc(62px + env(safe-area-inset-top));
     --scout-mobile-footer-space:calc(42px + env(safe-area-inset-bottom));
+    top:var(--scout-visible-viewport-offset-top,0px);
     height:var(--scout-visible-viewport-height,100dvh);
   }
 
@@ -563,21 +563,21 @@ body{
 
   .scout-hero{
     width:min(92vw,390px);
-    top:38%;
+    top:32%;
     transform:translate(-50%,-50%);
-    gap:6px;
+    gap:4px;
   }
 
   .scout-intro h1{
     width:min(320px,90vw);
     margin-inline:auto;
-    font-size:clamp(34px,9.2vw,36px);
+    font-size:clamp(27px,7.5vw,30px);
     line-height:1.08;
   }
 
   .scout-intro p{
     width:min(82vw,330px);
-    margin-top:8px;
+    margin-top:6px;
     font-size:15px;
     line-height:1.38;
   }
@@ -601,8 +601,7 @@ body{
   }
 
   /* Mobile composer is one compact row: action, message field, send action. */
-  .scout-composer,
-  .scout-thread-footer .scout-composer{
+  .scout-composer{
     display:grid;
     grid-template-columns:36px minmax(0,1fr) 36px;
     align-items:center;
@@ -618,7 +617,7 @@ body{
     position:relative;
     z-index:1;
     min-width:0;
-    font-size:12px;
+    font-size:16px;
     min-height:24px;
     height:24px;
     max-height:24px;
@@ -657,14 +656,23 @@ body{
     height:min(630px,calc(100dvh - 135px));
   }
 
-  /* In the active state, the thread flexes inside the protected chat zone
-     instead of using a viewport height that can cross the header or footer. */
+  /* Once a conversation exists, the compact global header supplies SCOUT
+     context; reserve the middle zone for the actual conversation. */
   .scout-hero:has(.scout-active-thread){
     top:0;
     height:100%;
     min-height:0;
     justify-content:flex-start;
+    gap:0;
     transform:translateX(-50%);
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-intro{
+    display:block;
+    flex:0 0 auto;
+    width:100%;
+    margin-bottom:4px;
+    padding:6px 0 0;
   }
 
   .scout-hero:has(.scout-active-thread) .scout-active-thread{
@@ -673,7 +681,44 @@ body{
     flex:1 1 auto;
   }
 
+  .scout-active-thread [data-slot="aui_message-group"]{
+    gap:14px;
+    margin-bottom:20px;
+  }
+
+  /* This is the footer emitted by ThreadPrimitive.ViewportFooter. */
+  .scout-active-thread .aui-thread-viewport-footer{
+    gap:6px;
+    padding:6px 8px 8px;
+  }
+
+  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)){
+    top:0;
+    height:100%;
+    min-height:0;
+    justify-content:flex-end;
+    gap:0;
+    padding-bottom:6px;
+    transform:translateX(-50%);
+  }
+
+  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-intro,
+  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-composer-descriptor{
+    display:none;
+  }
+
+  .scout-page[data-keyboard-open="true"] .scout-active-thread [data-slot="aui_message-group"]{
+    gap:12px;
+    margin-bottom:12px;
+  }
+
+  .scout-page[data-keyboard-open="true"] .scout-active-thread .aui-thread-viewport-footer{
+    gap:4px;
+    padding:4px 8px 6px;
+  }
+
   .scout-booking-review,
+  .scout-final-confirmation,
   .scout-traveller-identity,
   .scout-payment-method,
   .scout-review-authorize,
@@ -690,7 +735,7 @@ body{
    Modern mobile browsers update `dvh` as the keyboard opens. */
 @media(max-width:620px) and (max-height:740px){
   .scout-hero{
-    top:36%;
+    top:30%;
     gap:5px;
   }
 
@@ -700,6 +745,26 @@ body{
 
   .scout-active-thread{
     height:min(570px,calc(100dvh - 118px));
+  }
+
+  /* Keep the full compact hero, then make the assistant-ui viewport—not the
+     outer protected shell—the scroll boundary on short mobile screens. */
+  .scout-hero:has(.scout-active-thread) .scout-intro{
+    margin-bottom:2px;
+    padding-top:2px;
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-intro p{
+    margin-top:3px;
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-active-thread{
+    flex:1 1 0%;
+    min-height:0;
+  }
+
+  .scout-active-thread [data-slot="aui_thread-viewport"]{
+    min-height:0 !important;
   }
 }
 
@@ -720,14 +785,24 @@ body{
     --scout-mobile-footer-space:0px;
   }
 
-  .scout-composer,
-  .scout-thread-footer .scout-composer{
+  .scout-composer{
     min-height:58px;
     height:58px;
   }
 
   .scout-active-thread{
     height:calc(100dvh - 84px);
+  }
+}
+
+/* A focused mobile composer still needs a compact bit of SCOUT context.
+   The full compact hero remains above the thread. */
+@media(max-width:620px){
+  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-intro{
+    display:block;
+    flex:0 0 auto;
+    width:100%;
+    margin-bottom:4px;
   }
 }
 
@@ -1368,6 +1443,48 @@ body{
   margin-bottom: 22px;
 }
 
+/* Final Confirmation is a pre-payment session-only review. It reuses the
+   established itinerary presentation without initiating a commercial action. */
+.scout-final-confirmation {
+  width: min(52rem, calc(100% - 32px));
+  max-height: calc(100dvh - 96px);
+  margin: 56px auto 0;
+  padding: 28px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(13,14,24,.90);
+  box-shadow: 0 22px 64px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scout-final-confirmation-header h1 {
+  margin: 7px 0 10px;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.scout-final-confirmation-header p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.scout-final-confirmation-section { margin-top: 22px; }
+.scout-final-confirmation-section-title { margin-bottom: 10px; color: var(--lavender); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.scout-final-confirmation-route, .scout-final-confirmation-meta { display: block; }
+.scout-final-confirmation-route { font-size: 16px; font-weight: 500; }
+.scout-final-confirmation-meta { margin-top: 4px; color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-final-confirmation-section .scout-booking-itinerary { margin-top: 13px; }
+.scout-final-confirmation-travellers { display: grid; gap: 8px; }
+.scout-final-confirmation-travellers > div { display: flex; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.10); border-radius: 12px; background: rgba(255,255,255,.025); color: rgba(255,255,255,.70); font-size: 13px; }
+.scout-final-confirmation-travellers strong { color: #fff; font-weight: 500; }
+.scout-final-confirmation-travellers em { color: #83ddb8; font-size: 12px; font-style: normal; white-space: nowrap; }
+.scout-final-confirmation-safety { margin: 17px 0 0; color: rgba(255,255,255,.64); font-size: 12px; line-height: 1.5; }
+
 .scout-booking-back {
   padding: 0;
   border: 0;
@@ -1595,6 +1712,14 @@ body{
   font-size: 17px;
   font-weight: 500;
   letter-spacing: -.02em;
+}
+
+.scout-simulated-usdc {
+  display: inline;
+  margin: 0;
+  color: rgba(131,221,184,.78);
+  font: inherit;
+  letter-spacing: inherit;
 }
 
 .scout-booking-fare-travellers {
@@ -1981,9 +2106,10 @@ body{
 
 .scout-payment-context > strong { font-size: 15px; font-weight: 500; }
 .scout-payment-context > span { color: rgba(255,255,255,.54); font-size: 12px; }
-.scout-payment-context div { display: flex; justify-content: space-between; align-items: baseline; margin-top: 7px; }
-.scout-payment-context div span { color: rgba(255,255,255,.54); font-size: 12px; }
-.scout-payment-context div strong { font-size: 17px; font-weight: 500; }
+.scout-payment-context > .scout-payment-total { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 7px; }
+.scout-payment-context > .scout-payment-total > span { color: rgba(255,255,255,.54); font-size: 12px; }
+.scout-payment-context > .scout-payment-total > div { display: grid; justify-items: end; }
+.scout-payment-context > .scout-payment-total strong { font-size: 17px; font-weight: 500; }
 
 .scout-payment-options {
   display: grid;
@@ -2115,6 +2241,7 @@ body{
 .scout-execution-context strong { font-size: 15px; font-weight: 500; }
 .scout-execution-context span { color: rgba(255,255,255,.54); font-size: 12px; }
 .scout-execution-context em { margin-top: 5px; color: var(--lavender); font-size: 19px; font-style: normal; font-weight: 500; letter-spacing: -.025em; }
+.scout-execution-context em .scout-simulated-usdc { color: inherit; font: inherit; letter-spacing: inherit; }
 .scout-execution-timeline { display: grid; gap: 0; margin: 24px 0 0; padding: 0; list-style: none; }
 .scout-execution-timeline li { position: relative; display: flex; align-items: center; gap: 12px; min-height: 51px; color: rgba(255,255,255,.36); font-size: 14px; }
 .scout-execution-timeline li:not(:last-child)::after { content: ""; position: absolute; left: 8px; top: 34px; width: 1px; height: 22px; background: rgba(255,255,255,.16); }
@@ -2248,6 +2375,7 @@ body{
 /* Keep the locally scrollable booking surfaces understated against SCOUT's
    dark transaction UI without affecting the document or conversation thread. */
 .scout-booking-review,
+.scout-final-confirmation,
 .scout-traveller-identity,
 .scout-payment-method,
 .scout-review-authorize,
@@ -2259,6 +2387,7 @@ body{
 }
 
 .scout-booking-review::-webkit-scrollbar,
+.scout-final-confirmation::-webkit-scrollbar,
 .scout-traveller-identity::-webkit-scrollbar,
 .scout-payment-method::-webkit-scrollbar,
 .scout-review-authorize::-webkit-scrollbar,
@@ -2269,6 +2398,7 @@ body{
 }
 
 .scout-booking-review::-webkit-scrollbar-track,
+.scout-final-confirmation::-webkit-scrollbar-track,
 .scout-traveller-identity::-webkit-scrollbar-track,
 .scout-payment-method::-webkit-scrollbar-track,
 .scout-review-authorize::-webkit-scrollbar-track,
@@ -2279,6 +2409,7 @@ body{
 }
 
 .scout-booking-review::-webkit-scrollbar-thumb,
+.scout-final-confirmation::-webkit-scrollbar-thumb,
 .scout-traveller-identity::-webkit-scrollbar-thumb,
 .scout-payment-method::-webkit-scrollbar-thumb,
 .scout-review-authorize::-webkit-scrollbar-thumb,
@@ -2291,6 +2422,7 @@ body{
 }
 
 .scout-booking-review::-webkit-scrollbar-thumb:hover,
+.scout-final-confirmation::-webkit-scrollbar-thumb:hover,
 .scout-traveller-identity::-webkit-scrollbar-thumb:hover,
 .scout-payment-method::-webkit-scrollbar-thumb:hover,
 .scout-review-authorize::-webkit-scrollbar-thumb:hover,
@@ -2342,6 +2474,14 @@ body{
   }
 
   .scout-booking-review {
+    width: min(100% - 24px, 52rem);
+    max-height: calc(100dvh - 48px);
+    margin-top: 24px;
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .scout-final-confirmation {
     width: min(100% - 24px, 52rem);
     max-height: calc(100dvh - 48px);
     margin-top: 24px;
@@ -2423,6 +2563,7 @@ body{
      actual in-app surfaces, unlike standalone dev previews, remain bounded
      by `.scout-main`'s protected header/chat/footer zone. */
   .scout-main .scout-booking-review,
+  .scout-main .scout-final-confirmation,
   .scout-main .scout-traveller-identity,
   .scout-main .scout-payment-method,
   .scout-main .scout-review-authorize,
@@ -2431,6 +2572,21 @@ body{
   .scout-main .scout-trip-details {
     max-height: 100%;
     margin-top: 0;
+  }
+
+  /* Keep the simulated wallet equivalence as one equally prominent total on
+     narrow booking surfaces; non-wallet USD-only totals do not match this. */
+  .scout-authorize-total > strong:has(.scout-simulated-usdc),
+  .scout-confirmation-payment > em:has(.scout-simulated-usdc) {
+    font-size: clamp(17px, 4.75vw, 19px);
+    white-space: nowrap;
+  }
+
+  .scout-authorize-total > strong .scout-simulated-usdc,
+  .scout-confirmation-payment > em .scout-simulated-usdc {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
   }
 
 }

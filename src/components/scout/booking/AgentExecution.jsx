@@ -3,8 +3,10 @@ import { useEffect } from "react";
 import {
   EXECUTION_STATUSES,
   advanceExecution,
+  formatSimulatedUsdcAmount,
   getPaymentExecutionCopy,
   isAuthorizationBindingCurrent,
+  isScoutWalletPayment,
   startExecution,
 } from "./booking-review-session";
 
@@ -17,9 +19,9 @@ const STEP_COPY = {
 
 const STEP_DELAY_MS = 650;
 
-function getStepCopy(step, paymentMethod) {
+function getStepCopy(step, payment) {
   return step.key === "PAYMENT"
-    ? getPaymentExecutionCopy(paymentMethod)
+    ? getPaymentExecutionCopy(payment)
     : STEP_COPY[step.key];
 }
 
@@ -27,6 +29,9 @@ export default function AgentExecution({ session, onExecutionChange, onReturnToR
   const execution = session.execution;
   const bindingIsCurrent = isAuthorizationBindingCurrent(session);
   const isComplete = execution.status === EXECUTION_STATUSES.COMPLETED;
+  const simulatedUsdcAmount = isScoutWalletPayment(session.payment)
+    ? formatSimulatedUsdcAmount(session.itinerary?.price?.amount)
+    : null;
 
   useEffect(() => {
     if (!bindingIsCurrent || execution.status !== EXECUTION_STATUSES.NOT_STARTED) {
@@ -74,12 +79,15 @@ export default function AgentExecution({ session, onExecutionChange, onReturnToR
         {session.summary?.route && <strong>{session.summary.route}</strong>}
         {session.summary?.dates && <span>{session.summary.dates}</span>}
         {session.itinerary?.travellers && <span>{session.itinerary.travellers}</span>}
-        <em>{session.itinerary?.price?.amount || "Price unavailable"}</em>
+        <em>
+          {session.itinerary?.price?.amount || "Price unavailable"}
+          {simulatedUsdcAmount ? <span className="scout-simulated-usdc"> = {simulatedUsdcAmount}</span> : null}
+        </em>
       </section>
 
       <ol className="scout-execution-timeline">
         {execution.steps.map((step) => {
-          const copy = getStepCopy(step, session.payment.method);
+          const copy = getStepCopy(step, session.payment);
           const isDone = step.status === "COMPLETED";
           const isActive = step.status === "IN_PROGRESS";
 

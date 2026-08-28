@@ -47,8 +47,15 @@ export const BOOKING_VIEWS = {
 
 const PRE_AUTHORIZATION_BACK_STAGES = {
   TRAVELLER_IDENTITY: "REVIEW",
-  PAYMENT: "TRAVELLER_IDENTITY",
+  FINAL_CONFIRMATION: "TRAVELLER_IDENTITY",
+  PAYMENT: "FINAL_CONFIRMATION",
   REVIEW_AUTHORIZE: "PAYMENT",
+};
+
+const PRE_AUTHORIZATION_NEXT_STAGES = {
+  TRAVELLER_IDENTITY: "FINAL_CONFIRMATION",
+  FINAL_CONFIRMATION: "PAYMENT",
+  PAYMENT: "REVIEW_AUTHORIZE",
 };
 
 // These are explicit local prototype fixtures. No wallet, card, or balance is
@@ -67,6 +74,19 @@ export const SIMULATED_PAYMENT_DISPLAY = {
     simulated: true,
   },
 };
+
+// Display-only prototype convention: a rounded whole-dollar USD fare is shown
+// as the same whole-number USDC amount. This is not a quote or settlement value.
+export function formatSimulatedUsdcAmount(displayedUsdAmount) {
+  if (typeof displayedUsdAmount !== "string") return null;
+
+  const match = displayedUsdAmount.trim().match(/^US\$\s?(\d{1,3}(?:,\d{3})*|\d+)$/);
+  return match ? `USDC ${match[1]}` : null;
+}
+
+export function isScoutWalletPayment(payment) {
+  return payment?.method === PAYMENT_METHODS.SCOUT_WALLET_USDC;
+}
 
 export function createIdentityState() {
   return {
@@ -214,8 +234,8 @@ export function isAuthorizationBindingCurrent(session) {
   );
 }
 
-export function getPaymentExecutionCopy(paymentMethod) {
-  return paymentMethod === PAYMENT_METHODS.SCOUT_WALLET_USDC
+export function getPaymentExecutionCopy(payment) {
+  return isScoutWalletPayment(payment)
     ? { active: "Authorizing USDC payment...", complete: "USDC payment authorized" }
     : { active: "Authorizing card payment...", complete: "Card payment authorized" };
 }
@@ -287,6 +307,10 @@ export function createCompletionAcknowledgement(session) {
 
 export function getPreviousPreAuthorizationStage(stage) {
   return PRE_AUTHORIZATION_BACK_STAGES[stage] || null;
+}
+
+export function getNextPreAuthorizationStage(stage) {
+  return PRE_AUTHORIZATION_NEXT_STAGES[stage] || null;
 }
 
 /**

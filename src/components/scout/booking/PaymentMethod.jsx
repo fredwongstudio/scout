@@ -1,4 +1,6 @@
 import {
+  formatSimulatedUsdcAmount,
+  isScoutWalletPayment,
   PAYMENT_METHODS,
   SIMULATED_PAYMENT_DISPLAY,
   isPaymentSelected,
@@ -30,7 +32,7 @@ function PaymentOption({ title, detail, description, selected, onSelect, primary
 
 export default function PaymentMethod({ session, onPaymentChange, onContinue, onBack }) {
   const payment = session.payment;
-  const walletSelected = payment.method === PAYMENT_METHODS.SCOUT_WALLET_USDC;
+  const walletSelected = isScoutWalletPayment(payment);
   const cardSelected = payment.method === PAYMENT_METHODS.SAVED_CARD;
   const wallet = walletSelected
     ? payment.display
@@ -38,6 +40,10 @@ export default function PaymentMethod({ session, onPaymentChange, onContinue, on
   const card = cardSelected
     ? payment.display
     : SIMULATED_PAYMENT_DISPLAY[PAYMENT_METHODS.SAVED_CARD];
+  const total = session.itinerary?.price?.amount || "Price unavailable";
+  const simulatedUsdcAmount = walletSelected
+    ? formatSimulatedUsdcAmount(session.itinerary?.price?.amount)
+    : null;
 
   return (
     <section className="scout-payment-method" aria-label="Payment method">
@@ -53,9 +59,14 @@ export default function PaymentMethod({ session, onPaymentChange, onContinue, on
       <section className="scout-payment-context" aria-label="Booking context">
         {session.summary?.route && <strong>{session.summary.route}</strong>}
         {session.itinerary?.travellers && <span>{session.itinerary.travellers}</span>}
-        <div>
+        <div className="scout-payment-total">
           <span>Flight total</span>
-          <strong>{session.itinerary?.price?.amount || "Price unavailable"}</strong>
+          <div>
+            <strong>
+              {total}
+              {simulatedUsdcAmount ? <span className="scout-simulated-usdc"> = {simulatedUsdcAmount}</span> : null}
+            </strong>
+          </div>
         </div>
       </section>
 

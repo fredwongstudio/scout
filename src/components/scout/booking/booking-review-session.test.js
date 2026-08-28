@@ -18,6 +18,7 @@ import {
   canViewTrip,
   BOOKING_VIEWS,
   createCompletionAcknowledgement,
+  formatSimulatedUsdcAmount,
   getExpectedTravellerTypes,
   IDENTITY_METHODS,
   IDENTITY_STATUSES,
@@ -25,10 +26,12 @@ import {
   EXECUTION_STATUSES,
   EXECUTION_STEPS,
   getPaymentExecutionCopy,
+  getNextPreAuthorizationStage,
   getPreviousPreAuthorizationStage,
   isAuthorizationBindingCurrent,
   isIdentityReadyForPayment,
   isPaymentSelected,
+  isScoutWalletPayment,
   PAYMENT_METHODS,
   PAYMENT_STATUSES,
   selectBookingItinerary,
@@ -52,6 +55,31 @@ const cardTwo = {
   flightIdentifier: "SQ012",
   price: { amount: "US$1,865" },
 };
+
+test("formats the display-only simulated USDC amount from a whole-dollar USD string", () => {
+  const displayedUsdAmount = "US$489";
+  const groupedDisplayedUsdAmount = "US$1,740";
+
+  assert.equal(formatSimulatedUsdcAmount(displayedUsdAmount), "USDC 489");
+  assert.equal(formatSimulatedUsdcAmount(groupedDisplayedUsdAmount), "USDC 1,740");
+  assert.equal(formatSimulatedUsdcAmount("US$489.00"), null);
+  assert.equal(formatSimulatedUsdcAmount("Price unavailable"), null);
+  assert.equal(formatSimulatedUsdcAmount(null), null);
+  assert.equal(displayedUsdAmount, "US$489");
+  assert.equal(groupedDisplayedUsdAmount, "US$1,740");
+});
+
+test("makes the simulated USDC display eligible only for the selected SCOUT Wallet", () => {
+  const wallet = createSelectedPayment(PAYMENT_METHODS.SCOUT_WALLET_USDC);
+  const card = createSelectedPayment(PAYMENT_METHODS.SAVED_CARD);
+
+  assert.equal(isScoutWalletPayment(wallet), true);
+  assert.equal(isScoutWalletPayment(card), false);
+  assert.equal(isScoutWalletPayment(createPaymentState()), false);
+  assert.equal(isScoutWalletPayment(null), false);
+  assert.equal(formatSimulatedUsdcAmount(cardOne.price.amount), "USDC 1,740");
+  assert.equal(cardOne.price.amount, "US$1,740");
+});
 
 test("creates a booking session from the exact selected first card", () => {
   const session = createBookingReviewSession({ summary, itinerary: cardOne });
@@ -185,8 +213,8 @@ test("authorized execution advances through deterministic local steps to clearly
   assert.ok(execution.steps.every((step) => step.status === "COMPLETED"));
   assert.match(execution.bookingReference, /DEMO/);
   assert.match(execution.transactionReference, /DEMO/);
-  assert.equal(getPaymentExecutionCopy(PAYMENT_METHODS.SCOUT_WALLET_USDC).active, "Authorizing USDC payment...");
-  assert.equal(getPaymentExecutionCopy(PAYMENT_METHODS.SAVED_CARD).active, "Authorizing card payment...");
+  assert.equal(getPaymentExecutionCopy(createSelectedPayment(PAYMENT_METHODS.SCOUT_WALLET_USDC)).active, "Authorizing USDC payment...");
+  assert.equal(getPaymentExecutionCopy(createSelectedPayment(PAYMENT_METHODS.SAVED_CARD)).active, "Authorizing card payment...");
   assert.equal(createExecutionState().status, EXECUTION_STATUSES.NOT_STARTED);
 });
 
@@ -255,11 +283,46 @@ test("does not create a booking session without an itinerary identity", () => {
 
 test("maps only pre-authorization stages back one step", () => {
   assert.equal(getPreviousPreAuthorizationStage("TRAVELLER_IDENTITY"), "REVIEW");
-  assert.equal(getPreviousPreAuthorizationStage("PAYMENT"), "TRAVELLER_IDENTITY");
+  assert.equal(getPreviousPreAuthorizationStage("FINAL_CONFIRMATION"), "TRAVELLER_IDENTITY");
+  assert.equal(getPreviousPreAuthorizationStage("PAYMENT"), "FINAL_CONFIRMATION");
   assert.equal(getPreviousPreAuthorizationStage("REVIEW_AUTHORIZE"), "PAYMENT");
   assert.equal(getPreviousPreAuthorizationStage("REVIEW"), null);
   assert.equal(getPreviousPreAuthorizationStage("AGENT_EXECUTION"), null);
   assert.equal(getPreviousPreAuthorizationStage("CONFIRMED"), null);
+});
+
+test("inserts final confirmation between identity and payment without changing session data", () => {
+  const identity = createReadyIdentity(IDENTITY_METHODS.SCOUT_TRAVEL_ID, summary.travellers);
+  const payment = createSelectedPayment(PAYMENT_METHODS.SAVED_CARD);
+  const initial = {
+    ...createBookingReviewSession({ summary, itinerary: cardOne }),
+    stage: "TRAVELLER_IDENTITY",
+    offerRevalidated: true,
+    identity,
+    payment,
+  };
+  const finalConfirmation = {
+    ...initial,
+    stage: getNextPreAuthorizationStage(initial.stage),
+  };
+  const paymentStage = {
+    ...finalConfirmation,
+    stage: getNextPreAuthorizationStage(finalConfirmation.stage),
+  };
+
+  assert.equal(finalConfirmation.stage, "FINAL_CONFIRMATION");
+  assert.equal(paymentStage.stage, "PAYMENT");
+  assert.equal(finalConfirmation.itinerary, cardOne);
+  assert.deepEqual(finalConfirmation.identity.travellers, identity.travellers);
+  assert.deepEqual(paymentStage.payment, payment);
+  assert.equal(finalConfirmation.offerRevalidated, true);
+  assert.equal(finalConfirmation.execution.status, "NOT_STARTED");
+  assert.equal(getPreviousPreAuthorizationStage("FINAL_CONFIRMATION"), "TRAVELLER_IDENTITY");
+  assert.equal(getPreviousPreAuthorizationStage("PAYMENT"), "FINAL_CONFIRMATION");
+});
+
+test("keeps the existing payment-to-review transition after final confirmation", () => {
+  assert.equal(getNextPreAuthorizationStage("PAYMENT"), "REVIEW_AUTHORIZE");
 });
 
 test("reopening the same selected flight preserves completed pre-authorization state", () => {

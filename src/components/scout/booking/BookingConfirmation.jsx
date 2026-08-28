@@ -1,4 +1,8 @@
 import BookingJourney from "./BookingJourney";
+import {
+  formatSimulatedUsdcAmount,
+  isScoutWalletPayment,
+} from "./booking-review-session";
 import { formatAirlineDisplay } from "../flight/airlineDisplay";
 
 function getDestination(route) {
@@ -8,6 +12,9 @@ function getDestination(route) {
 export default function BookingConfirmation({ session, onViewTrip, onDone }) {
   const itinerary = session.itinerary;
   const destination = getDestination(session.summary?.route);
+  const simulatedUsdcAmount = isScoutWalletPayment(session.payment)
+    ? formatSimulatedUsdcAmount(itinerary?.price?.amount)
+    : null;
 
   return (
     <section className="scout-booking-confirmation" aria-label="Demo booking confirmation">
@@ -62,7 +69,10 @@ export default function BookingConfirmation({ session, onViewTrip, onDone }) {
           {session.payment.display?.asset ? ` · ${session.payment.display.asset}` : ""}
         </strong>
         <span>Total paid</span>
-        <em>{itinerary.price?.amount || "Price unavailable"}</em>
+        <em>
+          {itinerary.price?.amount || "Price unavailable"}
+          {simulatedUsdcAmount ? <span className="scout-simulated-usdc"> = {simulatedUsdcAmount}</span> : null}
+        </em>
         <p>Demo transaction — no real payment was made.</p>
       </section>
 

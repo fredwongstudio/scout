@@ -1,33 +1,11 @@
 import {
   AUTHORIZATION_STATUSES,
+  formatSimulatedUsdcAmount,
+  isScoutWalletPayment,
   isPaymentSelected,
 } from "./booking-review-session";
+import BookingJourney from "./BookingJourney";
 import { formatAirlineDisplay } from "../flight/airlineDisplay";
-
-function ReviewJourney({ label, journey }) {
-  if (!journey) return null;
-
-  return (
-    <section className="scout-authorize-journey">
-      <div className="scout-authorize-journey-label">{journey.label || label}</div>
-      <div className="scout-authorize-journey-route">
-        <div>
-          <strong>{journey.departureTime || "--:--"}</strong>
-          <span>{journey.departureAirport || "—"}</span>
-        </div>
-        <div className="scout-authorize-journey-middle">
-          <span>{journey.duration || "Duration unavailable"}</span>
-          <i aria-hidden="true" />
-          <em className={journey.stops === "Direct" ? "scout-booking-direct" : ""}>{journey.stops || "Stops unavailable"}</em>
-        </div>
-        <div>
-          <strong>{journey.arrivalTime || "--:--"}</strong>
-          <span>{journey.arrivalAirport || "—"}</span>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default function ReviewAuthorize({ session, onAuthorize, onChangePayment, onBack }) {
   const itinerary = session.itinerary;
@@ -35,6 +13,10 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
   const isAuthorized = authorization.status === AUTHORIZATION_STATUSES.AUTHORIZED;
   const canAuthorize = isPaymentSelected(session.payment) && !isAuthorized;
   const total = itinerary?.price?.amount || "Price unavailable";
+  const simulatedUsdcAmount = isScoutWalletPayment(session.payment)
+    ? formatSimulatedUsdcAmount(itinerary?.price?.amount)
+    : null;
+  const authorizationAmount = simulatedUsdcAmount ? `${total} = ${simulatedUsdcAmount}` : total;
 
   return (
     <section className="scout-review-authorize" aria-label="Review and authorize">
@@ -47,23 +29,8 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
         <p>Review everything below before authorizing SCOUT to complete the booking.</p>
       </header>
 
-      <section className="scout-authorize-section" aria-label="Selected flight">
-        <div className="scout-authorize-section-title">FLIGHT</div>
-        {session.summary?.route && <strong className="scout-authorize-route">{session.summary.route}</strong>}
-        {session.summary?.dates && <span className="scout-authorize-meta">{session.summary.dates}</span>}
-        <div className="scout-authorize-flight-card">
-          <div className="scout-authorize-airline">
-            {formatAirlineDisplay(itinerary)}
-            {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
-          </div>
-          <ReviewJourney label="OUTBOUND" journey={itinerary.outbound} />
-          <div className="scout-booking-divider" />
-          <ReviewJourney label="RETURN" journey={itinerary.return} />
-        </div>
-      </section>
-
       <section className="scout-authorize-section" aria-label="Travellers">
-        <div className="scout-authorize-section-title">TRAVELLERS</div>
+        <div className="scout-authorize-section-title">TRAVELLER DETAILS</div>
         <div className="scout-authorize-travellers">
           {session.identity.travellers.map((traveller) => (
             <div key={traveller.id}>
@@ -72,6 +39,26 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="scout-authorize-section" aria-label="Flight itinerary">
+        <div className="scout-authorize-section-title">FLIGHT ITINERARY</div>
+        {session.summary?.route && <strong className="scout-authorize-route">{session.summary.route}</strong>}
+        {session.summary?.dates && <span className="scout-authorize-meta">{session.summary.dates}</span>}
+        <article className="scout-booking-itinerary" data-itinerary-id={itinerary.id}>
+          <header className="scout-booking-itinerary-header">
+            <div className="scout-booking-itinerary-label">SELECTED FLIGHT</div>
+            <div className="scout-booking-airline">
+              {formatAirlineDisplay(itinerary)}
+              {itinerary.flightIdentifier ? ` · ${itinerary.flightIdentifier}` : ""}
+            </div>
+          </header>
+          <div className="scout-booking-itinerary-body">
+            <BookingJourney journey={itinerary.outbound} fallbackLabel="OUTBOUND" />
+            <div className="scout-booking-divider" />
+            <BookingJourney journey={itinerary.return} fallbackLabel="RETURN" />
+          </div>
+        </article>
       </section>
 
       <section className="scout-authorize-section" aria-label="Payment method">
@@ -89,7 +76,10 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
 
       <section className="scout-authorize-total" aria-label="Final total">
         <span>FINAL TOTAL</span>
-        <strong>{total}</strong>
+        <strong>
+          {total}
+          {simulatedUsdcAmount ? <span className="scout-simulated-usdc"> = {simulatedUsdcAmount}</span> : null}
+        </strong>
         <p>Baggage and fare conditions will be confirmed before purchase.</p>
       </section>
 
@@ -105,7 +95,7 @@ export default function ReviewAuthorize({ session, onAuthorize, onChangePayment,
         disabled={!canAuthorize}
         onClick={() => onAuthorize?.()}
       >
-        {isAuthorized ? "Authorization recorded ✓" : `Authorize SCOUT to complete booking · ${total}`}
+        {isAuthorized ? "Authorization recorded ✓" : `Authorize SCOUT to complete booking · ${authorizationAmount}`}
       </button>
       {isAuthorized && (
         <p className="scout-authorize-local-note" aria-live="polite">
