@@ -83,15 +83,15 @@ export default function TravellerIdentity({ session, onIdentityChange, onContinu
           <section className="scout-travel-id-option">
             <div className="scout-travel-id-badge">RECOMMENDED · FASTEST</div>
             <h2>Use SCOUT Travel ID</h2>
-            <p>Use your saved, verified traveller details for this booking.</p>
-            <span className="scout-travel-id-demo-note">Prototype simulation</span>
+            <p>Verified digital identity for this booking.</p>
+            <span className="scout-traveller-identity-simulation">Prototype simulation</span>
             <button
               type="button"
               className="scout-travel-id-action"
               disabled={isProcessing}
               onClick={() => beginIdentityMethod(IDENTITY_METHODS.SCOUT_TRAVEL_ID)}
             >
-              Use Travel ID <span aria-hidden="true">→</span>
+              Use SCOUT Travel ID <span aria-hidden="true">→</span>
             </button>
           </section>
 

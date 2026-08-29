@@ -1846,6 +1846,13 @@ body{
   line-height: 1.45;
 }
 
+.scout-traveller-identity-simulation {
+  display: inline-block;
+  margin-top: 7px;
+  color: rgba(255,255,255,.42);
+  font-size: 11px;
+}
+
 .scout-traveller-identity-count {
   margin-top: 12px;
   color: var(--lavender);
@@ -1880,13 +1887,6 @@ body{
   color: rgba(255,255,255,.65);
   font-size: 13px;
   line-height: 1.45;
-}
-
-.scout-travel-id-demo-note {
-  display: inline-block;
-  margin-top: 10px;
-  color: rgba(255,255,255,.42);
-  font-size: 11px;
 }
 
 .scout-travel-id-action,
