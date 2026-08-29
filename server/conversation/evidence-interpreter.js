@@ -35,6 +35,12 @@ async function interpretConversationEvidence(
               "Return an empty travellerMentions array when the latest message contains no traveller evidence. " +
               "Do not infer the user as a traveller unless the user explicitly indicates that they are travelling. " +
               "For example, 'Just me' means one adult traveller. " +
+              "Interpret family relationships from the grammar and stated travel participation, not from a fixed assumption about the speaker. " +
+              "For example, 'I am going with my parents' establishes the speaker plus two adult parents; 'my parents are going' establishes only two adult parents; and 'I am travelling with one of my parents' establishes the speaker plus one adult parent. " +
+              "'My parents and my son' establishes two adult parents and one child, but does not establish that the speaker is travelling unless the wording says so. " +
+              "A vague phrase such as 'going with family' does not establish a passenger count. " +
+              "Represent each established traveller separately in travellerMentions, including both parents when plural parents are explicitly travelling. " +
+              "These relationship-based composition signals are provisional until the traveller confirms the trip summary before search; do not invent ages or other passenger details. " +
               "Do not calculate passenger totals. " +
               "Do not decide whether the trip is ready for search. " +
               "Do not search for flights. " +
