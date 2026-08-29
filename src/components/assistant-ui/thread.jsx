@@ -105,7 +105,6 @@ const ThreadRoot = ({ isEmpty, className = "" }) => {
   const {
     Welcome = ThreadWelcome,
     Composer: ComposerComponent = Composer,
-    Thinking: ThinkingComponent = null,
   } = useContext(ThreadComponentsContext);
 
   return (
@@ -153,7 +152,6 @@ const ThreadRoot = ({ isEmpty, className = "" }) => {
                 "sticky bottom-0 mt-auto rounded-t-(--composer-radius)"
             )}>
             <ThreadFollowupSuggestions />
-            {ThinkingComponent && <ThinkingComponent />}
             <ComposerComponent />
             <AuiIf condition={(s) => isNewChatView(s) && s.composer.isEmpty}>
               <ThreadSuggestions />
@@ -296,12 +294,31 @@ const MessageError = () => {
   );
 };
 
+const isRenderableAssistantPart = (part) => {
+  switch (part.type) {
+    case "text":
+      return Boolean(part.text?.trim());
+    case "reasoning":
+    case "tool-call":
+    case "data":
+    case "file":
+    case "image":
+      return true;
+    default:
+      return false;
+  }
+};
+
 const AssistantMessage = () => {
   const {
     ToolFallback: ToolFallbackComponent = ToolFallback,
     ToolGroup,
     ReasoningGroup,
+    Thinking: ThinkingComponent = null,
   } = useContext(ThreadComponentsContext);
+  const showThinking = useAuiState(
+    (state) => state.thread.isRunning && !state.message.parts.some(isRenderableAssistantPart)
+  );
 
   const ACTION_BAR_PT = "pt-1.5";
   // Keep the action bar inside the contained root's paint box, then cancel its reserved space in flow.
@@ -315,67 +332,69 @@ const AssistantMessage = () => {
       <div
         data-slot="aui_assistant-message-content"
         className="text-foreground px-2 leading-relaxed wrap-break-word">
-        <MessagePrimitive.GroupedParts
-          groupBy={groupPartByType({
-            reasoning: ["group-chainOfThought", "group-reasoning"],
-            "tool-call": ["group-chainOfThought", "group-tool"],
-            "standalone-tool-call": [],
-          })}>
-          {({ part, children }) => {
-            switch (part.type) {
-              case "group-chainOfThought":
-                return <div data-slot="aui_chain-of-thought">{children}</div>;
-              case "group-tool":
-                if (ToolGroup) {
-                  return <ToolGroup group={part}>{children}</ToolGroup>;
+        {showThinking && ThinkingComponent ? <ThinkingComponent /> : (
+          <MessagePrimitive.GroupedParts
+            groupBy={groupPartByType({
+              reasoning: ["group-chainOfThought", "group-reasoning"],
+              "tool-call": ["group-chainOfThought", "group-tool"],
+              "standalone-tool-call": [],
+            })}>
+            {({ part, children }) => {
+              switch (part.type) {
+                case "group-chainOfThought":
+                  return <div data-slot="aui_chain-of-thought">{children}</div>;
+                case "group-tool":
+                  if (ToolGroup) {
+                    return <ToolGroup group={part}>{children}</ToolGroup>;
+                  }
+                  return (
+                    <ToolGroupRoot variant="ghost">
+                      <ToolGroupTrigger count={part.indices.length} active={part.status.type === "running"} />
+                      <ToolGroupContent>{children}</ToolGroupContent>
+                    </ToolGroupRoot>
+                  );
+                case "group-reasoning": {
+                  if (ReasoningGroup) {
+                    return (<ReasoningGroup group={part}>{children}</ReasoningGroup>);
+                  }
+                  const running = part.status.type === "running";
+                  return (
+                    <ReasoningRoot streaming={running}>
+                      <ReasoningTrigger active={running} />
+                      <ReasoningContent aria-busy={running}>
+                        <ReasoningText>{children}</ReasoningText>
+                      </ReasoningContent>
+                    </ReasoningRoot>
+                  );
                 }
-                return (
-                  <ToolGroupRoot variant="ghost">
-                    <ToolGroupTrigger count={part.indices.length} active={part.status.type === "running"} />
-                    <ToolGroupContent>{children}</ToolGroupContent>
-                  </ToolGroupRoot>
-                );
-              case "group-reasoning": {
-                if (ReasoningGroup) {
-                  return (<ReasoningGroup group={part}>{children}</ReasoningGroup>);
-                }
-                const running = part.status.type === "running";
-                return (
-                  <ReasoningRoot streaming={running}>
-                    <ReasoningTrigger active={running} />
-                    <ReasoningContent aria-busy={running}>
-                      <ReasoningText>{children}</ReasoningText>
-                    </ReasoningContent>
-                  </ReasoningRoot>
-                );
+                case "text":
+                  return <MarkdownText />;
+                case "reasoning":
+                  return <Reasoning {...part} />;
+                case "tool-call":
+                  return part.toolUI ?? <ToolFallbackComponent {...part} />;
+                case "data":
+                  return part.dataRendererUI;
+                case "file":
+                  return (
+                    <div data-slot="aui_assistant-message-file" className="py-1">
+                      <File {...part} />
+                    </div>
+                  );
+                case "image":
+                  return (
+                    <div data-slot="aui_assistant-message-image" className="py-1">
+                      <Image {...part} />
+                    </div>
+                  );
+                case "indicator":
+                  return null;
+                default:
+                  return null;
               }
-              case "text":
-                return <MarkdownText />;
-              case "reasoning":
-                return <Reasoning {...part} />;
-              case "tool-call":
-                return part.toolUI ?? <ToolFallbackComponent {...part} />;
-              case "data":
-                return part.dataRendererUI;
-              case "file":
-                return (
-                  <div data-slot="aui_assistant-message-file" className="py-1">
-                    <File {...part} />
-                  </div>
-                );
-              case "image":
-                return (
-                  <div data-slot="aui_assistant-message-image" className="py-1">
-                    <Image {...part} />
-                  </div>
-                );
-              case "indicator":
-                return null;
-              default:
-                return null;
-            }
-          }}
-        </MessagePrimitive.GroupedParts>
+            }}
+          </MessagePrimitive.GroupedParts>
+        )}
         <MessageError />
       </div>
 

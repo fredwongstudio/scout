@@ -827,18 +827,17 @@ body{
   display:flex;
   align-items:center;
   gap:8px;
-  align-self:flex-start;
   width:fit-content;
-  min-height:28px;
-  margin:0 0 2px;
-  padding:5px 10px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:13px;
-  background:rgba(255,255,255,.07);
-  color:rgba(255,255,255,.58);
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:rgba(255,255,255,.92);
   font-size:13px;
   line-height:18px;
   letter-spacing:.01em;
+  box-shadow:none;
 }
 
 .scout-thinking-label{

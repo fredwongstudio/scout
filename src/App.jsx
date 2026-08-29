@@ -181,16 +181,14 @@ function EmptyComposer() {
 
 function ScoutThinking() {
   return (
-    <AuiIf condition={(s) => s.thread.isRunning}>
-      <div className="scout-thinking" aria-live="polite" aria-label="SCOUT is thinking">
-        <span className="scout-thinking-label">SCOUT is thinking...</span>
-        <span className="scout-thinking-signal" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-      </div>
-    </AuiIf>
+    <div className="scout-thinking" aria-live="polite" aria-label="SCOUT is thinking">
+      <span className="scout-thinking-label">SCOUT is thinking...</span>
+      <span className="scout-thinking-signal" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
+    </div>
   );
 }
 
@@ -376,7 +374,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
         aria-haspopup="dialog"
         aria-expanded={isHowToTestOpen}
       >
-        How to test
+        About
       </button>
 
       <main className="scout-main">
@@ -496,6 +494,9 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
             <p className="scout-how-to-test-note">
               Sandbox flight inventory · Booking and payment are simulated.
             </p>
+            <h3>How to try it</h3>
+            <p>Keep it simple if you want to reach the booking experience quickly.</p>
+            <p>Try:<br />“I want to go Bangkok next month for 4 days with my family. No early morning flights.”</p>
           </section>
         </div>
       )}
