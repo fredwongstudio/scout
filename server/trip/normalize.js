@@ -6,6 +6,11 @@ function normalizeAirportCode(value) {
   return resolveSupportedCity(value);
 }
 
+function normalizeDestinationCountry(value) {
+  const country = String(value || "").trim();
+  return country || null;
+}
+
 function normalizeDate(value, referenceDate = new Date()) {
   if (!value) return null;
 
@@ -82,6 +87,10 @@ function normalizeTripCandidate(candidate) {
       ? normalizeAirportCode(candidate.destination)
       : null,
 
+    destinationCountry: normalizeDestinationCountry(
+      candidate.destinationCountry
+    ),
+
     departureDate: normalizeDate(candidate.departureDate),
 
     returnDate: normalizeDate(candidate.returnDate),
@@ -108,6 +117,7 @@ function normalizeTripCandidate(candidate) {
 
 module.exports = {
   normalizeAirportCode,
+  normalizeDestinationCountry,
   normalizeDate,
   normalizeTripCandidate
 };

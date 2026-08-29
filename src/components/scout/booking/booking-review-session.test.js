@@ -12,6 +12,7 @@ import {
   createAuthorizationState,
   createAuthorizedState,
   createExecutionState,
+  advanceBookingReview,
   startExecution,
   advanceExecution,
   canViewBooking,
@@ -111,6 +112,36 @@ test("creates a booking session from the exact selected first card", () => {
   assert.equal(session.execution.status, "NOT_STARTED");
   assert.equal(session.view, BOOKING_VIEWS.CONFIRMATION);
   assert.equal(session.completionAcknowledged, false);
+});
+
+test("does not advance booking review until simulated revalidation completes", () => {
+  const session = createBookingReviewSession({ summary, itinerary: cardOne });
+
+  assert.equal(advanceBookingReview(session), session);
+  assert.equal(session.stage, "REVIEW");
+});
+
+test("advances booking review after simulated revalidation completes", () => {
+  const session = {
+    ...createBookingReviewSession({ summary, itinerary: cardOne }),
+    offerRevalidated: true,
+  };
+
+  const advanced = advanceBookingReview(session);
+
+  assert.equal(advanced.stage, "TRAVELLER_IDENTITY");
+  assert.equal(advanced.itinerary, cardOne);
+});
+
+test("does not programmatically bypass the review gate from another stage", () => {
+  const session = {
+    ...createBookingReviewSession({ summary, itinerary: cardOne }),
+    stage: "PAYMENT",
+    offerRevalidated: true,
+  };
+
+  assert.equal(advanceBookingReview(session), session);
+  assert.equal(session.stage, "PAYMENT");
 });
 
 test("derives only the expected traveller types from the selected itinerary summary", () => {

@@ -1641,12 +1641,22 @@ body{
 }
 
 .scout-booking-revalidation {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: grid;
+  gap: 4px;
   margin-top: 16px;
   color: rgba(255,255,255,.68);
   font-size: 13px;
+}
+
+.scout-booking-revalidation-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scout-booking-prototype-note {
+  color: rgba(255,255,255,.42);
+  font-size: 11px;
 }
 
 .scout-booking-revalidation span:first-child { color: #83ddb8; }
@@ -1796,6 +1806,12 @@ body{
 .scout-booking-continue:focus-visible {
   outline: 2px solid #d9caff;
   outline-offset: 2px;
+}
+
+.scout-booking-continue:disabled {
+  cursor: not-allowed;
+  filter: grayscale(.4);
+  opacity: .48;
 }
 
 .scout-booking-next-step {

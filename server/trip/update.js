@@ -17,6 +17,7 @@ function applyTripCandidate(currentState, candidate) {
   const fields = [
     "origin",
     "destination",
+    "destinationCountry",
     "departureDate",
     "returnDate",
     "tripLengthDays",
@@ -35,6 +36,14 @@ function applyTripCandidate(currentState, candidate) {
       nextState[field] = candidate[field];
       changed = true;
     }
+  }
+
+  if (
+    candidate.destination &&
+    nextState.destinationCountry !== null
+  ) {
+    nextState.destinationCountry = null;
+    changed = true;
   }
 
   if (

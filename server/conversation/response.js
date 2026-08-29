@@ -33,11 +33,16 @@ function formatSearchCompleted(result) {
 
 function formatIncompleteResponse(state, nextAction) {
   const destination = state?.destination;
+  const destinationCountry = state?.destinationCountry;
   const departureDate = state?.departureDate;
   const tripLength = state?.tripLengthDays;
   const origin = state?.origin;
 
   if (nextAction === "ASK_DESTINATION") {
+    if (destinationCountry) {
+      return `Nice — which part of ${destinationCountry} are you thinking?`;
+    }
+
     return "Where you thinking of going? 😎";
   }
 

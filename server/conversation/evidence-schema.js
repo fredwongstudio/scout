@@ -9,6 +9,7 @@ const travellerMentionSchema = z.object({
 const conversationEvidenceSchema = z.object({
   origin: z.string().nullable(),
   destination: z.string().nullable(),
+  destinationCountry: z.string().nullable(),
   departureDate: z.string().nullable(),
   returnDate: z.string().nullable(),
   tripLengthDays: z.number().nullable(),

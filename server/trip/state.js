@@ -5,6 +5,7 @@ const initialTripState = () => ({
   status: TRIP_STATUS.INCOMPLETE,
   origin: null,
   destination: null,
+  destinationCountry: null,
   departureDate: null,
   returnDate: null,
   tripLengthDays: null,

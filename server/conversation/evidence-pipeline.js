@@ -65,6 +65,7 @@ function buildTripCandidateFromInterpretedEvidence(
   return {
     origin: normalized.origin,
     destination: normalized.destination,
+    destinationCountry: normalized.destinationCountry,
     departureDate: normalized.departureDate,
     returnDate: normalized.returnDate,
     tripLengthDays: normalized.tripLengthDays,

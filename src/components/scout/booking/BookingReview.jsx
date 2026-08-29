@@ -51,14 +51,17 @@ export default function BookingReview({ session, onContinue, onBack, onRevalidat
       </article>
 
       <section className="scout-booking-revalidation" aria-live="polite">
-        {isConfirmed ? (
-          <div className="scout-booking-commercial-status">
-            <div><span aria-hidden="true">✓</span> Flight available</div>
-            <div><span aria-hidden="true">✓</span> Price confirmed</div>
-          </div>
-        ) : (
-          <><span className="scout-booking-checking-dot" aria-hidden="true" /> Checking latest availability and fare...</>
-        )}
+        <div className="scout-booking-revalidation-status">
+          {isConfirmed ? (
+            <div className="scout-booking-commercial-status">
+              <div><span aria-hidden="true">✓</span> Flight available</div>
+              <div><span aria-hidden="true">✓</span> Price confirmed</div>
+            </div>
+          ) : (
+            <><span className="scout-booking-checking-dot" aria-hidden="true" /> Checking latest availability and fare...</>
+          )}
+        </div>
+        <div className="scout-booking-prototype-note">Prototype simulation</div>
       </section>
 
       <section className="scout-booking-fare" aria-label="Fare and booking details">
@@ -99,6 +102,7 @@ export default function BookingReview({ session, onContinue, onBack, onRevalidat
         type="button"
         className="scout-booking-continue"
         onClick={onContinue}
+        disabled={!isConfirmed}
       >
         Continue <span aria-hidden="true">→</span>
       </button>

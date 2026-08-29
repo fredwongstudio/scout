@@ -49,7 +49,7 @@ function applyTripPolicy(state) {
   ) {
     result.returnDate = addCalendarDays(
       result.departureDate,
-      Number(result.tripLengthDays) - 1
+      Number(result.tripLengthDays)
     );
   }
 

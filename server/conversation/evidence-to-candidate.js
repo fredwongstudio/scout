@@ -6,6 +6,7 @@ function evidenceToCandidate(evidence) {
   return {
     origin: evidence.origin,
     destination: evidence.destination,
+    destinationCountry: evidence.destinationCountry,
     departureDate: evidence.departureDate,
     returnDate: evidence.returnDate,
     tripLengthDays: evidence.tripLengthDays,

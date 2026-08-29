@@ -36,6 +36,9 @@ async function interpretConversationEvidence(
               "If the immediately preceding assistant question asks for a destination, a bare city or place answer establishes destination only: origin must be null and originExplicitlyEstablished must be false. " +
               "If the immediately preceding assistant question asks for an origin, a bare city or place answer establishes origin only: destination must be null and originExplicitlyEstablished must be true. " +
               "An explicit route expression such as 'Singapore to Bangkok' may establish both origin and destination, and must set originExplicitlyEstablished to true. " +
+              "When the user expresses destination intent for a country but does not name a city or airport, set destinationCountry to the human-readable country name and leave destination null. " +
+              "A country is not a canonical flight destination and must never be placed in destination. " +
+              "When the user names a city or airport, set destination to that location and destinationCountry to null unless the country itself is newly relevant. " +
               "Return an empty travellerMentions array when the latest message contains no traveller evidence. " +
               "Do not infer the user as a traveller unless the user explicitly indicates that they are travelling. " +
               "For example, 'Just me' means one adult traveller. " +

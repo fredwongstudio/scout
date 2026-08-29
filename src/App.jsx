@@ -25,6 +25,7 @@ import {
   createAuthorizedState,
   createExecutionState,
   createSelectedPayment,
+  advanceBookingReview,
   canViewBooking,
   canViewTrip,
   createCompletionAcknowledgement,
@@ -522,10 +523,7 @@ export default function App() {
   };
 
   const continueBooking = () => {
-    setBookingSession((current) => current && {
-      ...current,
-      stage: "TRAVELLER_IDENTITY",
-    });
+    setBookingSession((current) => advanceBookingReview(current));
   };
 
   const completeRevalidation = () => {

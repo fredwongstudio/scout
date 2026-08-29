@@ -313,6 +313,17 @@ export function getNextPreAuthorizationStage(stage) {
   return PRE_AUTHORIZATION_NEXT_STAGES[stage] || null;
 }
 
+export function advanceBookingReview(session) {
+  if (session?.stage !== "REVIEW" || session.offerRevalidated !== true) {
+    return session;
+  }
+
+  return {
+    ...session,
+    stage: "TRAVELLER_IDENTITY",
+  };
+}
+
 /**
  * Keeps a selected search result at the UI boundary. It intentionally holds
  * the existing presented itinerary rather than changing canonical trip state.
