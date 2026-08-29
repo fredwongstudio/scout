@@ -121,10 +121,14 @@ function RotatingBackground() {
 }
 
 function ScoutComposer() {
+  const hasUserMessage = useAuiState(
+    (state) => state.thread.messages.some((message) => message.role === "user")
+  );
+
   return (
     <ComposerPrimitive.Root className="scout-composer">
       <ComposerPrimitive.Input
-        placeholder="Which city are we going?"
+        placeholder={hasUserMessage ? "Write a message..." : "Which city are we going?"}
         className="scout-composer-input"
         rows={1}
         autoFocus
