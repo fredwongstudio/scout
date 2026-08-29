@@ -375,7 +375,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
         aria-haspopup="dialog"
         aria-expanded={isHowToTestOpen}
       >
-        About
+        How to test
       </button>
 
       <main className="scout-main">
@@ -487,17 +487,27 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
             <p>
               SCOUT is an Agentic Commerce Flight Booking Prototype exploring how an AI travel agent can take you from conversation to booking.
             </p>
-            <h3>Try the full journey</h3>
             <p>
-              Start with a return flight from Singapore to Tokyo and let SCOUT guide you through the rest.
+              For the best prototype experience, keep your trip simple.
             </p>
-            <p>Feel free to try other destinations and airports too.</p>
+            <p>
+              Try a flight search for 1–2 adults and follow SCOUT&apos;s conversation one step at a time.
+            </p>
+            <h3>Example</h3>
+            <p>
+              Destination: Bangkok<br />
+              Departure: 3 Sep<br />
+              Trip length: 4 nights<br />
+              Flying from: Singapore<br />
+              Travellers: Me
+            </p>
+            <p>
+              Then follow SCOUT through flight search, flight selection and the simulated booking experience.
+            </p>
+            <h3>Prototype note</h3>
             <p className="scout-how-to-test-note">
-              Sandbox flight inventory · Booking and payment are simulated.
+              Traveller identity, payment, authorization and booking execution are simulated. No real booking or payment will be made.
             </p>
-            <h3>How to try it</h3>
-            <p>Keep it simple if you want to reach the booking experience quickly.</p>
-            <p>Try:<br />“I want to go Bangkok next month for 4 days with my family. No early morning flights.”</p>
           </section>
         </div>
       )}
