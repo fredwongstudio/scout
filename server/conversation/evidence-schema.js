@@ -13,6 +13,7 @@ const conversationEvidenceSchema = z.object({
   returnDate: z.string().nullable(),
   tripLengthDays: z.number().nullable(),
   tripType: z.enum(["ROUND_TRIP", "ONE_WAY"]).nullable(),
+  originExplicitlyEstablished: z.boolean(),
   travellerMentions: z.array(travellerMentionSchema)
 });
 

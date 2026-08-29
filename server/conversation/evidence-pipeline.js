@@ -40,8 +40,20 @@ function buildTripCandidateFromInterpretedEvidence(
       message
     );
 
-  const normalized =
+  let normalized =
     normalizeTripCandidate(translated);
+
+  if (
+    nextAction === "ASK_DESTINATION" &&
+    normalized.destination &&
+    normalized.origin === normalized.destination &&
+    translated.originExplicitlyEstablished !== true
+  ) {
+    normalized = {
+      ...normalized,
+      origin: null
+    };
+  }
 
   const passengers =
     normalized.travellerMentions.length > 0

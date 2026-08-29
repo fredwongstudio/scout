@@ -10,6 +10,8 @@ function evidenceToCandidate(evidence) {
     returnDate: evidence.returnDate,
     tripLengthDays: evidence.tripLengthDays,
     tripType: evidence.tripType,
+    originExplicitlyEstablished:
+      evidence.originExplicitlyEstablished === true,
     travellerMentions: Array.isArray(
       evidence.travellerMentions
     )

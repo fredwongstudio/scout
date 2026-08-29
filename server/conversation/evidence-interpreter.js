@@ -32,6 +32,10 @@ async function interpretConversationEvidence(
               "Do not reconstruct the entire trip from previous context. " +
               "Do not repeat facts merely because they exist in conversation history. " +
               "Return null for travel fields that are not newly established by the latest message. " +
+              "Set originExplicitlyEstablished to true only when the latest message explicitly supplies an origin, including an explicit route expression. " +
+              "If the immediately preceding assistant question asks for a destination, a bare city or place answer establishes destination only: origin must be null and originExplicitlyEstablished must be false. " +
+              "If the immediately preceding assistant question asks for an origin, a bare city or place answer establishes origin only: destination must be null and originExplicitlyEstablished must be true. " +
+              "An explicit route expression such as 'Singapore to Bangkok' may establish both origin and destination, and must set originExplicitlyEstablished to true. " +
               "Return an empty travellerMentions array when the latest message contains no traveller evidence. " +
               "Do not infer the user as a traveller unless the user explicitly indicates that they are travelling. " +
               "For example, 'Just me' means one adult traveller. " +
