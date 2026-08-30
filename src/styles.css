@@ -507,6 +507,11 @@ body{
     height:var(--scout-visible-viewport-height,100dvh);
   }
 
+  .scout-page:not([data-conversation-started="true"]){
+    top:0;
+    height:100vh;
+  }
+
   .scout-page[data-keyboard-open="true"]{
     --scout-mobile-footer-space:0px;
   }
@@ -692,21 +697,6 @@ body{
     padding:6px 8px 8px;
   }
 
-  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)){
-    top:0;
-    height:100%;
-    min-height:0;
-    justify-content:flex-end;
-    gap:0;
-    padding-bottom:6px;
-    transform:translateX(-50%);
-  }
-
-  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-intro,
-  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-composer-descriptor{
-    display:none;
-  }
-
   .scout-page[data-keyboard-open="true"] .scout-active-thread [data-slot="aui_message-group"]{
     gap:12px;
     margin-bottom:12px;
@@ -771,17 +761,13 @@ body{
 @media(max-width:620px) and (max-height:560px){
   /* This is the keyboard-sized viewport: preserve the composer and a
      scrollable conversation first; the introductory hero is non-essential. */
-  .scout-hero{
-    top:57%;
-  }
-
-  .scout-intro,
-  .scout-composer-descriptor,
-  .scout-footer{
+  .scout-page[data-conversation-started="true"] .scout-intro,
+  .scout-page[data-conversation-started="true"] .scout-composer-descriptor,
+  .scout-page[data-conversation-started="true"] .scout-footer{
     display:none;
   }
 
-  .scout-page{
+  .scout-page[data-conversation-started="true"]{
     --scout-mobile-footer-space:0px;
   }
 
@@ -792,17 +778,6 @@ body{
 
   .scout-active-thread{
     height:calc(100dvh - 84px);
-  }
-}
-
-/* A focused mobile composer still needs a compact bit of SCOUT context.
-   The full compact hero remains above the thread. */
-@media(max-width:620px){
-  .scout-page[data-keyboard-open="true"] .scout-hero:not(:has(.scout-active-thread)) .scout-intro{
-    display:block;
-    flex:0 0 auto;
-    width:100%;
-    margin-bottom:4px;
   }
 }
 

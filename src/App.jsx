@@ -291,6 +291,9 @@ function ScoutChat({ keyboardOpen }) {
 function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onContinueBooking, onIdentityChange, onContinueToFinalConfirmation, onContinueToPayment, onPaymentChange, onContinueToReview, onAuthorize, onBackFromBooking, onRevalidationComplete, onChangePayment, onExecutionChange, onReturnToReview, onViewBooking, onViewTrip, onBackToConfirmation, onDone }) {
   const [isHowToTestOpen, setIsHowToTestOpen] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const hasUserMessage = useAuiState(
+    (state) => state.thread.messages.some((message) => message.role === "user")
+  );
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -303,7 +306,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
     }
 
     const updateVisibleViewportHeight = () => {
-      if (!mobileViewport.matches) {
+      if (!mobileViewport.matches || !hasUserMessage) {
         page.style.removeProperty("--scout-visible-viewport-height");
         page.style.removeProperty("--scout-visible-viewport-offset-top");
         page.removeAttribute("data-keyboard-open");
@@ -342,7 +345,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
       page.style.removeProperty("--scout-visible-viewport-offset-top");
       page.removeAttribute("data-keyboard-open");
     };
-  }, []);
+  }, [hasUserMessage]);
 
   useEffect(() => {
     if (!isHowToTestOpen) return undefined;
@@ -356,7 +359,11 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
   }, [isHowToTestOpen]);
 
   return (
-    <div ref={pageRef} className="scout-page">
+    <div
+      ref={pageRef}
+      className="scout-page"
+      data-conversation-started={hasUserMessage ? "true" : undefined}
+    >
       <RotatingBackground />
 
       <div className="scout-video-overlay" />
