@@ -20,6 +20,7 @@
 
   .scout-bg-video,
   .scout-video-overlay,
+  .scout-brand-lockup,
   .scout-brand,
   .scout-trip-back,
   .scout-trip-actions,
@@ -126,11 +127,17 @@ body{
   background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.22) 45%,rgba(0,0,0,.78));
 }
 
-.scout-brand{
+.scout-brand-lockup{
   position:absolute;
   z-index:6;
   left:5vw;
   top:28px;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+
+.scout-brand{
   padding:0;
   border:0;
   background:transparent;
@@ -141,6 +148,27 @@ body{
   font-weight:400;
   letter-spacing:.16em;
   cursor:pointer;
+}
+
+.scout-brand-descriptor{
+  color:rgba(255,255,255,.56);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.055em;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.scout-brand-descriptor span{
+  color:rgba(255,255,255,.34);
+  margin-right:6px;
+}
+
+@media(min-width:621px){
+  .scout-brand-descriptor{
+    font-size:16px;
+    font-weight:300;
+  }
 }
 
 .scout-brand:focus-visible{
@@ -321,16 +349,6 @@ body{
   letter-spacing:-.045em;
 }
 
-.scout-composer-descriptor{
-  margin-top:2px;
-  color:rgba(255,255,255,.58);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-align:center;
-  text-transform:uppercase;
-}
-
 .scout-intro p{
   margin:12px auto 0;
   max-width:760px;
@@ -347,6 +365,7 @@ body{
    over the background. There is no Thread or scroll container here. */
 .scout-empty-composer{
   width:min(860px,92vw);
+  margin-bottom:24px;
 }
 
 .scout-composer{
@@ -560,10 +579,19 @@ body{
     display:inline;
   }
 
-  .scout-brand{
+  .scout-brand-lockup{
     left:calc(20px + env(safe-area-inset-left));
     top:calc(18px + env(safe-area-inset-top));
+    gap:8px;
+  }
+
+  .scout-brand{
     font-size:24px;
+  }
+
+  .scout-brand-descriptor{
+    font-size:9px;
+    letter-spacing:.04em;
   }
 
   .scout-hero{
@@ -592,13 +620,9 @@ body{
     white-space:nowrap;
   }
 
-  .scout-composer-descriptor{
-    margin-top:0;
-    font-size:11px;
-  }
-
   .scout-empty-composer{
     width:min(90vw,380px);
+    margin-bottom:17px;
   }
 
   .scout-active-thread{
@@ -762,7 +786,6 @@ body{
   /* This is the keyboard-sized viewport: preserve the composer and a
      scrollable conversation first; the introductory hero is non-essential. */
   .scout-page[data-conversation-started="true"] .scout-intro,
-  .scout-page[data-conversation-started="true"] .scout-composer-descriptor,
   .scout-page[data-conversation-started="true"] .scout-footer{
     display:none;
   }
@@ -778,6 +801,22 @@ body{
 
   .scout-active-thread{
     height:calc(100dvh - 84px);
+  }
+}
+
+@media(max-width:380px){
+  .scout-brand-lockup{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:3px;
+  }
+
+  .scout-brand-descriptor{
+    display:block;
+  }
+
+  .scout-brand-descriptor span{
+    display:none;
   }
 }
 

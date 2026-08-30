@@ -169,14 +169,9 @@ function ScoutComposer() {
 
 function EmptyComposer() {
   return (
-    <>
-      <div className="scout-empty-composer">
-        <ScoutComposer />
-      </div>
-      <div className="scout-composer-descriptor">
-        Agentic Commerce Flight Booking Prototype
-      </div>
-    </>
+    <div className="scout-empty-composer">
+      <ScoutComposer />
+    </div>
   );
 }
 
@@ -367,14 +362,19 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
       <RotatingBackground />
 
       <div className="scout-video-overlay" />
-      <button
-        type="button"
-        className="scout-brand"
-        onClick={onResetScout}
-        aria-label="Reset SCOUT"
-      >
-        SCOUT
-      </button>
+      <div className="scout-brand-lockup">
+        <button
+          type="button"
+          className="scout-brand"
+          onClick={onResetScout}
+          aria-label="Reset SCOUT"
+        >
+          SCOUT
+        </button>
+        <span className="scout-brand-descriptor">
+          <span aria-hidden="true">|</span> Agentic Commerce Prototype
+        </span>
+      </div>
       <button
         type="button"
         className="scout-how-to-test-trigger"
@@ -492,7 +492,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
             </button>
             <h2 id="scout-how-to-test-title">How to test SCOUT</h2>
             <p>
-              SCOUT is an Agentic Commerce Flight Booking Prototype exploring how an AI travel agent can take you from conversation to booking.
+              This prototype explores how an AI travel agent can take you from conversation to booking.
             </p>
             <p>
               <strong>For the best prototype experience, keep your trip simple. Best experienced on desktop.</strong>
