@@ -19,6 +19,7 @@ import {
   canViewTrip,
   BOOKING_VIEWS,
   createCompletionAcknowledgement,
+  formatPartyTotalLabel,
   formatSimulatedUsdcAmount,
   getExpectedTravellerTypes,
   IDENTITY_METHODS,
@@ -68,6 +69,33 @@ test("formats the display-only simulated USDC amount from a whole-dollar USD str
   assert.equal(formatSimulatedUsdcAmount(null), null);
   assert.equal(displayedUsdAmount, "US$489");
   assert.equal(groupedDisplayedUsdAmount, "US$1,740");
+});
+
+test("formats deterministic party-aware total labels from structured passenger counts", () => {
+  assert.equal(
+    formatPartyTotalLabel({ adults: 1, children: 0, infants: 0 }),
+    "TOTAL (1 ADULT)",
+  );
+  assert.equal(
+    formatPartyTotalLabel({ adults: 2, children: 0, infants: 0 }),
+    "TOTAL (2 ADULTS)",
+  );
+  assert.equal(
+    formatPartyTotalLabel({ adults: 2, children: 1, infants: 0 }),
+    "TOTAL (2 ADULTS, 1 CHILD)",
+  );
+  assert.equal(
+    formatPartyTotalLabel({ adults: 1, children: 2, infants: 0 }),
+    "TOTAL (1 ADULT, 2 CHILDREN)",
+  );
+  assert.equal(
+    formatPartyTotalLabel({ adults: 2, children: 0, infants: 1 }),
+    "TOTAL (2 ADULTS, 1 INFANT)",
+  );
+  assert.equal(
+    formatPartyTotalLabel({ adults: 2, children: 1, infants: 1 }),
+    "TOTAL (2 ADULTS, 1 CHILD, 1 INFANT)",
+  );
 });
 
 test("makes the simulated USDC display eligible only for the selected SCOUT Wallet", () => {

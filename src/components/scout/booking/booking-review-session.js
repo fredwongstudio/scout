@@ -84,6 +84,30 @@ export function formatSimulatedUsdcAmount(displayedUsdAmount) {
   return match ? `USDC ${match[1]}` : null;
 }
 
+export function formatPartyTotalLabel(passengerCounts) {
+  const counts = passengerCounts || {};
+  const adults = Number(counts.adults || 0);
+  const children = Number(counts.children || 0);
+  const infants = Number(counts.infants || 0);
+  const parts = [];
+
+  if (adults > 0) {
+    parts.push(`${adults} ADULT${adults === 1 ? "" : "S"}`);
+  }
+
+  if (children > 0) {
+    parts.push(`${children} ${children === 1 ? "CHILD" : "CHILDREN"}`);
+  }
+
+  if (infants > 0) {
+    parts.push(`${infants} INFANT${infants === 1 ? "" : "S"}`);
+  }
+
+  return parts.length > 0
+    ? `TOTAL (${parts.join(", ")})`
+    : "TOTAL AMOUNT";
+}
+
 export function isScoutWalletPayment(payment) {
   return payment?.method === PAYMENT_METHODS.SCOUT_WALLET_USDC;
 }

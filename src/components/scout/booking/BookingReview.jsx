@@ -70,7 +70,7 @@ export default function BookingReview({ session, onContinue, onBack, onRevalidat
           <div className="scout-booking-fare-type">{itinerary.fare}</div>
         )}
         <div className="scout-booking-fare-total">
-          <span>Flight total</span>
+          <span>TOTAL</span>
           <strong>{itinerary.price?.amount || "Price unavailable"}</strong>
         </div>
         {itinerary.travellers && (
@@ -80,7 +80,7 @@ export default function BookingReview({ session, onContinue, onBack, onRevalidat
         )}
         {itinerary.price?.perPersonAmount && (
           <div className="scout-booking-per-person">
-            {itinerary.price.perPersonAmount}<span>/ person</span>
+            {itinerary.price.perPersonAmount}<span> per person</span>
           </div>
         )}
         <div className="scout-booking-unknown-details">

@@ -44,7 +44,6 @@ export default function FinalConfirmation({ session, onContinue, onBack }) {
         <div className="scout-final-confirmation-section-title">FLIGHT ITINERARY</div>
         {session.summary?.route ? <strong className="scout-final-confirmation-route">{session.summary.route}</strong> : null}
         {session.summary?.dates ? <span className="scout-final-confirmation-meta">{session.summary.dates}</span> : null}
-        {itinerary.travellers ? <span className="scout-final-confirmation-meta">{itinerary.travellers}</span> : null}
         <article className="scout-booking-itinerary" data-itinerary-id={itinerary.id}>
           <header className="scout-booking-itinerary-header">
             <div className="scout-booking-itinerary-label">SELECTED FLIGHT</div>
@@ -65,12 +64,17 @@ export default function FinalConfirmation({ session, onContinue, onBack }) {
         <div className="scout-booking-section-title">FARE</div>
         {itinerary.fare ? <div className="scout-booking-fare-type">{itinerary.fare}</div> : null}
         <div className="scout-booking-fare-total">
-          <span>Total trip price</span>
+          <span>TOTAL</span>
           <strong>{itinerary.price?.amount || "Price unavailable"}</strong>
         </div>
+        {itinerary.travellers ? (
+          <div className="scout-booking-fare-travellers">
+            {itinerary.travellers}
+          </div>
+        ) : null}
         {itinerary.price?.perPersonAmount ? (
           <div className="scout-booking-per-person">
-            {itinerary.price.perPersonAmount}<span>/ person</span>
+            {itinerary.price.perPersonAmount}<span> per person</span>
           </div>
         ) : null}
       </section>

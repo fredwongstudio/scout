@@ -215,6 +215,10 @@ function presentFlightCard(itinerary, options = {}) {
     travellers:
       formatTravellers(travellerCounts),
 
+    passengerCounts: {
+      ...travellerCounts
+    },
+
     price: {
       amount:
         formatDisplayPrice(

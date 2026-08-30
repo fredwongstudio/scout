@@ -1751,6 +1751,28 @@ body{
   letter-spacing: 0;
 }
 
+.scout-booking-review .scout-booking-fare-total strong,
+.scout-final-confirmation .scout-booking-fare-total strong {
+  font-size: 30px;
+  letter-spacing: -.04em;
+}
+
+.scout-booking-review .scout-booking-per-person,
+.scout-final-confirmation .scout-booking-per-person {
+  margin-top: 8px;
+  color: rgba(255,255,255,.66);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.scout-booking-review .scout-booking-per-person span,
+.scout-final-confirmation .scout-booking-per-person span {
+  color: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
 .scout-booking-unknown-details {
   display: grid;
   gap: 11px;

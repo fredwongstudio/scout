@@ -22,6 +22,16 @@ const card = presentFlightCard(itinerary);
 
 assert.equal(card.price.amount, "US$1,748");
 assert.equal(card.price.perPersonAmount, "US$583");
+assert.deepEqual(card.passengerCounts, {
+  adults: 2,
+  children: 1,
+  infants: 0,
+});
+assert.deepEqual(itinerary.pricing.travellerCounts, {
+  adults: 2,
+  children: 1,
+  infants: 0,
+});
 assert.equal(itinerary.pricing.totalTripPrice, 1747.06);
 
 console.log("PASS: display prices round up without changing exact itinerary totals");
