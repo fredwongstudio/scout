@@ -10,7 +10,7 @@ function formatSearchCompleted(result) {
   const itinerary = results?.itineraries?.[0];
 
   if (!itinerary) {
-    return "I couldn't find a usable return flight for those dates.";
+    return "I couldn’t find suitable flights this time.";
   }
 
   if (Array.isArray(cards) && cards.length > 1) {
@@ -116,7 +116,7 @@ function formatConversationResponse(result) {
   }
 
   if (result.action === "SEARCH_UNAVAILABLE") {
-    return "Sorry, I hit a snag fetching live flights. Let me try again.";
+    return "I couldn’t find suitable flights this time.";
   }
 
   if (result.action === "REQUEST_VALUE_CHOICE") {

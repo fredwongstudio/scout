@@ -67,6 +67,24 @@ function createConversationOrchestrator() {
     return searchFlights(state);
   }
 
+  function buildFlightSearchRecoveryUi() {
+    return [
+      {
+        type: "data",
+        name: "flight_search_recovery",
+        data: {}
+      }
+    ];
+  }
+
+  function buildSearchUnavailableResult(state) {
+    return {
+      action: "SEARCH_UNAVAILABLE",
+      state,
+      ui: buildFlightSearchRecoveryUi()
+    };
+  }
+
   function applyPreferenceEvidence(preferenceEvidence) {
     if (!preferenceEvidence) {
       return;
@@ -147,7 +165,9 @@ function createConversationOrchestrator() {
       state,
       results: displayedResults,
       valueEngine,
-      ui: cards.length > 0
+      ui: !results?.itineraries?.[0]
+        ? buildFlightSearchRecoveryUi()
+        : cards.length > 0
         ? [
             {
               type: "data",
@@ -379,10 +399,7 @@ function createConversationOrchestrator() {
     try {
       results = await executeSearch(confirmedState);
     } catch (error) {
-      const result = {
-        action: "SEARCH_UNAVAILABLE",
-        state: confirmedState
-      };
+      const result = buildSearchUnavailableResult(confirmedState);
 
       recordTurn(message, result);
 
@@ -738,10 +755,7 @@ function createConversationOrchestrator() {
           currentState
         );
       } catch (error) {
-        const result = {
-          action: "SEARCH_UNAVAILABLE",
-          state: currentState
-        };
+        const result = buildSearchUnavailableResult(currentState);
 
         recordTurn(message, result);
 

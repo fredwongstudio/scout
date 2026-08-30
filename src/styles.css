@@ -1138,6 +1138,42 @@ body{
   line-height: 1.35;
 }
 
+.scout-flight-search-unavailable {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.scout-flight-search-unavailable p {
+  margin: 0;
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.scout-flight-search-unavailable button {
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6337ad, #8651d4);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scout-flight-search-unavailable button:hover {
+  filter: brightness(1.07);
+}
+
+.scout-flight-search-unavailable button:focus-visible {
+  outline: 2px solid #d9caff;
+  outline-offset: 3px;
+}
+
 .scout-flight-card {
   width: 100%;
   min-width: 0;

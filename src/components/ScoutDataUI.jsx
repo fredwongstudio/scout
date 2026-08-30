@@ -140,7 +140,21 @@ export function FlightResultContent({ data, onSelectFlight }) {
   );
 }
 
-export default function ScoutDataUI({ onSelectFlight }) {
+function FlightSearchRecovery({ onStartNewSearch }) {
+  return (
+    <section
+      className="scout-flight-search-unavailable"
+      aria-label="Flight search recovery"
+    >
+      <p>Please start a new search and try again.</p>
+      <button type="button" onClick={onStartNewSearch}>
+        Start a new search
+      </button>
+    </section>
+  );
+}
+
+export default function ScoutDataUI({ onSelectFlight, onStartNewSearch }) {
   useAssistantDataUI({
     name: "flight_result",
     render: (props) => (
@@ -148,6 +162,13 @@ export default function ScoutDataUI({ onSelectFlight }) {
         data={props.data}
         onSelectFlight={onSelectFlight}
       />
+    ),
+  });
+
+  useAssistantDataUI({
+    name: "flight_search_recovery",
+    render: () => (
+      <FlightSearchRecovery onStartNewSearch={onStartNewSearch} />
     ),
   });
 

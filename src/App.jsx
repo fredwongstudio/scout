@@ -722,7 +722,10 @@ export default function App() {
     <AssistantRuntimeProvider
       runtime={runtime}
     >
-      <ScoutDataUI onSelectFlight={selectFlight} />
+      <ScoutDataUI
+        onSelectFlight={selectFlight}
+        onStartNewSearch={resetScout}
+      />
       <TooltipProvider>
         <ScoutShell
           onResetScout={resetScout}
