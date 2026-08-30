@@ -583,7 +583,9 @@ body{
   .scout-brand-lockup{
     left:calc(20px + env(safe-area-inset-left));
     top:calc(18px + env(safe-area-inset-top));
-    gap:8px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:3px;
   }
 
   .scout-brand{
@@ -591,8 +593,13 @@ body{
   }
 
   .scout-brand-descriptor{
+    display:block;
     font-size:9px;
     letter-spacing:.04em;
+  }
+
+  .scout-brand-descriptor span{
+    display:none;
   }
 
   .scout-hero{
@@ -802,22 +809,6 @@ body{
 
   .scout-active-thread{
     height:calc(100dvh - 84px);
-  }
-}
-
-@media(max-width:380px){
-  .scout-brand-lockup{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:3px;
-  }
-
-  .scout-brand-descriptor{
-    display:block;
-  }
-
-  .scout-brand-descriptor span{
-    display:none;
   }
 }
 
