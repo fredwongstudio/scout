@@ -23,6 +23,7 @@ async function interpretConversationEvidence(
     const response = await openai.responses.parse(
       {
         model: "gpt-5-mini",
+        reasoning: { effort: "minimal" },
         input: [
           {
             role: "system",
