@@ -495,7 +495,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
               SCOUT is an Agentic Commerce Flight Booking Prototype exploring how an AI travel agent can take you from conversation to booking.
             </p>
             <p>
-              For the best prototype experience, keep your trip simple.
+              <strong>For the best prototype experience, keep your trip simple. Best experienced on desktop.</strong>
             </p>
             <p>
               Try a flight search for 1–2 adults and follow SCOUT&apos;s conversation one step at a time.
