@@ -301,7 +301,21 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
     }
 
     const updateVisibleViewportHeight = () => {
-      if (!mobileViewport.matches || !hasUserMessage) {
+      if (!mobileViewport.matches) {
+        page.style.removeProperty("--scout-header-viewport-offset-top");
+        page.style.removeProperty("--scout-visible-viewport-height");
+        page.style.removeProperty("--scout-visible-viewport-offset-top");
+        page.removeAttribute("data-keyboard-open");
+        setIsKeyboardOpen(false);
+        return;
+      }
+
+      page.style.setProperty(
+        "--scout-header-viewport-offset-top",
+        `${Math.round(visualViewport.offsetTop || 0)}px`
+      );
+
+      if (!hasUserMessage) {
         page.style.removeProperty("--scout-visible-viewport-height");
         page.style.removeProperty("--scout-visible-viewport-offset-top");
         page.removeAttribute("data-keyboard-open");
@@ -336,6 +350,7 @@ function ScoutShell({ onResetScout, bookingSession, bookingExperienceOpen, onCon
       visualViewport.removeEventListener("resize", updateVisibleViewportHeight);
       visualViewport.removeEventListener("scroll", updateVisibleViewportHeight);
       mobileViewport.removeEventListener("change", updateVisibleViewportHeight);
+      page.style.removeProperty("--scout-header-viewport-offset-top");
       page.style.removeProperty("--scout-visible-viewport-height");
       page.style.removeProperty("--scout-visible-viewport-offset-top");
       page.removeAttribute("data-keyboard-open");
