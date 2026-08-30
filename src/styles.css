@@ -549,6 +549,7 @@ body{
   }
 
   .scout-how-to-test-trigger{
+    position:fixed;
     top:calc(14px + env(safe-area-inset-top));
     right:calc(16px + env(safe-area-inset-right));
     padding:7px 10px;
@@ -581,6 +582,7 @@ body{
   }
 
   .scout-brand-lockup{
+    position:fixed;
     left:calc(20px + env(safe-area-inset-left));
     top:calc(18px + env(safe-area-inset-top));
     flex-direction:column;
