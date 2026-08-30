@@ -611,6 +611,10 @@ body{
     gap:4px;
   }
 
+  .scout-page:not([data-conversation-started="true"]) .scout-hero{
+    top:50%;
+  }
+
   .scout-intro h1{
     width:min(320px,90vw);
     margin-inline:auto;
