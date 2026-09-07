@@ -1,4 +1,11 @@
 function getNextConversationAction(state, conversationContext = {}) {
+  if (state?.datePolicyIssues?.departureDate) {
+    return "ASK_DEPARTURE_DATE";
+  }
+
+  if (state?.datePolicyIssues?.returnDate) {
+    return "ASK_RETURN_DATE";
+  }
   if (!state?.destination) {
     return "ASK_DESTINATION";
   }

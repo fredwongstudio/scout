@@ -9,6 +9,7 @@ function evidenceToCandidate(evidence) {
     destinationCountry: evidence.destinationCountry,
     departureDate: evidence.departureDate,
     returnDate: evidence.returnDate,
+    dateProvenance: evidence.dateProvenance,
     tripLengthDays: evidence.tripLengthDays,
     tripType: evidence.tripType,
     originExplicitlyEstablished:

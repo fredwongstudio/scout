@@ -41,8 +41,7 @@ export function FlightResultContent({ data, onSelectFlight }) {
   useEffect(() => {
     if (
       !resultKey ||
-      positionedResultKeyRef.current === resultKey ||
-      !window.matchMedia("(max-width: 620px)").matches
+      positionedResultKeyRef.current === resultKey
     ) {
       return undefined;
     }

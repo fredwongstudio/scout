@@ -8,6 +8,14 @@ const initialTripState = () => ({
   destinationCountry: null,
   departureDate: null,
   returnDate: null,
+  dateSources: {
+    departureDate: null,
+    returnDate: null
+  },
+  datePolicyIssues: {
+    departureDate: null,
+    returnDate: null
+  },
   tripLengthDays: null,
   tripType: null,
   passengers: {

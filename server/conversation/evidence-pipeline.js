@@ -41,7 +41,11 @@ function buildTripCandidateFromInterpretedEvidence(
     );
 
   let normalized =
-    normalizeTripCandidate(translated);
+    normalizeTripCandidate(
+      translated,
+      new Date(),
+      message
+    );
 
   if (
     nextAction === "ASK_DESTINATION" &&
@@ -68,6 +72,8 @@ function buildTripCandidateFromInterpretedEvidence(
     destinationCountry: normalized.destinationCountry,
     departureDate: normalized.departureDate,
     returnDate: normalized.returnDate,
+    dateProvenance: normalized.dateProvenance,
+    datePolicyIssues: normalized.datePolicyIssues,
     tripLengthDays: normalized.tripLengthDays,
     tripType: normalized.tripType,
     travellerMentions:

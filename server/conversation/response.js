@@ -38,6 +38,18 @@ function formatIncompleteResponse(state, nextAction) {
   const tripLength = state?.tripLengthDays;
   const origin = state?.origin;
 
+  if (state?.datePolicyIssues?.departureDate === "OUTSIDE_HORIZON") {
+    return "SCOUT can search flights in the next 12 months. What departure date works?";
+  }
+
+  if (state?.datePolicyIssues?.returnDate === "OUTSIDE_HORIZON") {
+    return "SCOUT can search flights in the next 12 months. When would you like to come back?";
+  }
+
+  if (state?.datePolicyIssues?.returnDate === "BEFORE_DEPARTURE") {
+    return "Your return date needs to be after your departure. When would you like to come back?";
+  }
+
   if (nextAction === "ASK_DESTINATION") {
     if (destinationCountry) {
       return `Nice — which part of ${destinationCountry} are you thinking?`;

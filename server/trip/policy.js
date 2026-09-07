@@ -24,6 +24,20 @@ function addCalendarDays(dateString, days) {
 function applyTripPolicy(state) {
   const result = JSON.parse(JSON.stringify(state || {}));
 
+  if (!result.dateSources) {
+    result.dateSources = {
+      departureDate: null,
+      returnDate: null
+    };
+  }
+
+  if (!result.datePolicyIssues) {
+    result.datePolicyIssues = {
+      departureDate: null,
+      returnDate: null
+    };
+  }
+
   if (!result.passengers) {
     result.passengers = {
       adults: 0,
@@ -44,6 +58,7 @@ function applyTripPolicy(state) {
   if (
     result.tripType === "ROUND_TRIP" &&
     !result.returnDate &&
+    !result.datePolicyIssues.returnDate &&
     result.departureDate &&
     Number(result.tripLengthDays) > 0
   ) {
@@ -51,10 +66,13 @@ function applyTripPolicy(state) {
       result.departureDate,
       Number(result.tripLengthDays)
     );
+    result.dateSources.returnDate = "DERIVED";
   }
 
   if (result.tripType === "ONE_WAY") {
     result.returnDate = null;
+    result.dateSources.returnDate = null;
+    result.datePolicyIssues.returnDate = null;
   }
 
   return result;

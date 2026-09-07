@@ -13,6 +13,13 @@ function isValidDate(value) {
 function isTripReadyForConfirmation(tripState) {
   if (!tripState) return false;
 
+  if (
+    tripState.datePolicyIssues?.departureDate ||
+    tripState.datePolicyIssues?.returnDate
+  ) {
+    return false;
+  }
+
   if (!tripState.origin) return false;
   if (!tripState.destination) return false;
 
@@ -24,6 +31,10 @@ function isTripReadyForConfirmation(tripState) {
 
   if (tripState.tripType === "ROUND_TRIP") {
     if (!isValidDate(tripState.returnDate)) {
+      return false;
+    }
+
+    if (tripState.returnDate < tripState.departureDate) {
       return false;
     }
   }

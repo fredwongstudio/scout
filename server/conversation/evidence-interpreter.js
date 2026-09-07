@@ -33,6 +33,8 @@ async function interpretConversationEvidence(
               "Do not reconstruct the entire trip from previous context. " +
               "Do not repeat facts merely because they exist in conversation history. " +
               "Return null for travel fields that are not newly established by the latest message. " +
+              "For each date field, set dateProvenance to CURRENT_TURN only when the latest user message explicitly supplies or corrects that date; set it to RECONSTRUCTED if it merely repeats or infers a date from history; otherwise set it to NONE. " +
+              "Do not emit a reconstructed date as CURRENT_TURN evidence. When a user supplies a month and day without a year, preserve that month/day expression instead of choosing a year. " +
               "Set originExplicitlyEstablished to true only when the latest message explicitly supplies an origin, including an explicit route expression. " +
               "If the immediately preceding assistant question asks for a destination, a bare city or place answer establishes destination only: origin must be null and originExplicitlyEstablished must be false. " +
               "If the immediately preceding assistant question asks for an origin, a bare city or place answer establishes origin only: destination must be null and originExplicitlyEstablished must be true. " +

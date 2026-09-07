@@ -6,12 +6,22 @@ const travellerMentionSchema = z.object({
   age: z.number().nullable()
 });
 
+const dateEvidenceSourceSchema = z.enum([
+  "CURRENT_TURN",
+  "RECONSTRUCTED",
+  "NONE"
+]);
+
 const conversationEvidenceSchema = z.object({
   origin: z.string().nullable(),
   destination: z.string().nullable(),
   destinationCountry: z.string().nullable(),
   departureDate: z.string().nullable(),
   returnDate: z.string().nullable(),
+  dateProvenance: z.object({
+    departureDate: dateEvidenceSourceSchema,
+    returnDate: dateEvidenceSourceSchema
+  }),
   tripLengthDays: z.number().nullable(),
   tripType: z.enum(["ROUND_TRIP", "ONE_WAY"]).nullable(),
   originExplicitlyEstablished: z.boolean(),
@@ -20,5 +30,6 @@ const conversationEvidenceSchema = z.object({
 
 module.exports = {
   travellerMentionSchema,
+  dateEvidenceSourceSchema,
   conversationEvidenceSchema
 };
