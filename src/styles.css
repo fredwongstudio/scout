@@ -519,6 +519,28 @@ body{
   background:transparent;
 }
 
+@media(min-width:621px) and (max-height:1120px){
+  .scout-hero:has(.scout-active-thread){
+    top:72px;
+    bottom:64px;
+    height:auto;
+    min-height:0;
+    justify-content:flex-start;
+    transform:translateX(-50%);
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-intro{
+    flex:0 0 auto;
+  }
+
+  .scout-hero:has(.scout-active-thread) .scout-active-thread{
+    height:auto;
+    min-height:0;
+    max-height:none;
+    flex:1 1 auto;
+  }
+}
+
 @media(max-width:620px){
   .scout-page{
     --scout-mobile-header-space:calc(62px + env(safe-area-inset-top));
