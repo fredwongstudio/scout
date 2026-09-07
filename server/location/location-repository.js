@@ -60,6 +60,7 @@ const byAirportName = new Map();
 const byMunicipality = new Map();
 const byCountryCode = new Map();
 const byCityName = new Map();
+const cityByPreferredAirport = new Map();
 
 for (const location of locations) {
   byIataCode.set(location.iataCode, location);
@@ -92,6 +93,13 @@ for (const city of aviationCities.locations) {
     normalizeLookupValue(city.name),
     city
   );
+
+  if (city.preferredAirport) {
+    cityByPreferredAirport.set(
+      city.preferredAirport,
+      city
+    );
+  }
 }
 
 function findByIataCode(code) {
@@ -116,6 +124,12 @@ function findByCityName(name) {
   return [
     ...(byCityName.get(normalizeLookupValue(name)) || [])
   ];
+}
+
+function findCityByPreferredAirport(code) {
+  return cityByPreferredAirport.get(
+    String(code || "").trim().toUpperCase()
+  ) || null;
 }
 
 function airportProminence(location) {
@@ -232,6 +246,7 @@ module.exports = {
   findByAirportName,
   findByMunicipality,
   findByCityName,
+  findCityByPreferredAirport,
   findByCountryCode,
   findBestExactLocation
 };

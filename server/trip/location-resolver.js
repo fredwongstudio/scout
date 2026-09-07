@@ -11,7 +11,9 @@ const legacyCityCompatibility = {
 
 const {
   findByIataCode,
-  findBestExactLocation
+  findByCityName,
+  findBestExactLocation,
+  findCityByPreferredAirport
 } = require("../location/location-repository");
 
 const legacyCityDisplayNames = {
@@ -35,10 +37,19 @@ function resolveSupportedCity(value) {
     return explicitIataLocation.iataCode;
   }
 
+  const exactCityMatches = findByCityName(raw);
+
+  if (
+    exactCityMatches.length === 1 &&
+    exactCityMatches[0].preferredAirport
+  ) {
+    return exactCityMatches[0].preferredAirport;
+  }
+
   const bestLocation = findBestExactLocation(raw);
 
   return bestLocation
-    ? bestLocation.iataCode
+    ? bestLocation.preferredAirport || bestLocation.iataCode
     : legacyCityCompatibility[
       raw.toLowerCase().replace(/\s+/g, " ")
     ] || null;
@@ -51,6 +62,13 @@ function getLocationDisplayName(value) {
 
   if (legacyCityDisplayNames[cityCode]) {
     return legacyCityDisplayNames[cityCode];
+  }
+
+  const preferredCity =
+    findCityByPreferredAirport(cityCode);
+
+  if (preferredCity) {
+    return preferredCity.name;
   }
 
   const location = findByIataCode(cityCode);

@@ -937,6 +937,7 @@
       "countryCode": "EG",
       "countryName": "Egypt",
       "iataCode": "ALY",
+      "preferredAirport": "HBE",
       "airports": [
         "HBE"
       ],
@@ -1049,6 +1050,7 @@
       "countryCode": "TR",
       "countryName": "Turkey",
       "iataCode": "ANK",
+      "preferredAirport": "ESB",
       "airports": [
         "ESB"
       ],
@@ -1962,6 +1964,7 @@
       "countryCode": "AZ",
       "countryName": "Azerbaijan",
       "iataCode": "BAK",
+      "preferredAirport": "GYD",
       "airports": [
         "GYD"
       ],
@@ -2759,6 +2762,7 @@
       "countryCode": "BR",
       "countryName": "Brazil",
       "iataCode": "BHZ",
+      "preferredAirport": "CNF",
       "airports": [
         "CNF"
       ],
@@ -2978,6 +2982,7 @@
       "countryCode": "CN",
       "countryName": "China",
       "iataCode": "BJS",
+      "preferredAirport": "PEK",
       "airports": [
         "PEK",
         "PKX"
@@ -4094,6 +4099,7 @@
       "countryCode": "AR",
       "countryName": "Argentina",
       "iataCode": "BUE",
+      "preferredAirport": "EZE",
       "airports": [
         "AEP",
         "EZE"
@@ -4122,6 +4128,7 @@
       "countryCode": "RO",
       "countryName": "Romania",
       "iataCode": "BUH",
+      "preferredAirport": "OTP",
       "airports": [
         "BBU",
         "OTP"
@@ -4726,6 +4733,7 @@
       "countryCode": "MA",
       "countryName": "Morocco",
       "iataCode": "CAS",
+      "preferredAirport": "CMN",
       "airports": [
         "CMN"
       ],
@@ -5350,6 +5358,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "CHI",
+      "preferredAirport": "ORD",
       "airports": [
         "MDW",
         "ORD",
@@ -6277,6 +6286,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "CSL",
+      "preferredAirport": "SBP",
       "airports": [
         "SBP"
       ],
@@ -7375,6 +7385,7 @@
       "countryCode": "SN",
       "countryName": "Senegal",
       "iataCode": "DKR",
+      "preferredAirport": "DSS",
       "airports": [
         "DSS"
       ],
@@ -7808,6 +7819,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "DTT",
+      "preferredAirport": "DTW",
       "airports": [
         "DTW"
       ],
@@ -9710,6 +9722,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "FYV",
+      "preferredAirport": "XNA",
       "airports": [
         "XNA"
       ],
@@ -11121,6 +11134,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "HAR",
+      "preferredAirport": "MDT",
       "airports": [
         "MDT"
       ],
@@ -12754,6 +12768,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "ILE",
+      "preferredAirport": "GRK",
       "airports": [
         "GRK"
       ],
@@ -13669,6 +13684,7 @@
       "countryCode": "TR",
       "countryName": "Turkey",
       "iataCode": "IZM",
+      "preferredAirport": "ADB",
       "airports": [
         "ADB"
       ],
@@ -14164,6 +14180,7 @@
       "countryCode": "ID",
       "countryName": "Indonesia",
       "iataCode": "JKT",
+      "preferredAirport": "CGK",
       "airports": [
         "CGK",
         "HLP"
@@ -17742,6 +17759,7 @@
       "countryCode": "GB",
       "countryName": "United Kingdom",
       "iataCode": "LON",
+      "preferredAirport": "LHR",
       "airports": [
         "LCY",
         "LGW",
@@ -18993,6 +19011,7 @@
       "countryCode": "ID",
       "countryName": "Indonesia",
       "iataCode": "MES",
+      "preferredAirport": "KNO",
       "airports": [
         "KNO"
       ],
@@ -19337,6 +19356,7 @@
       "countryCode": "IT",
       "countryName": "Italy",
       "iataCode": "MIL",
+      "preferredAirport": "MXP",
       "airports": [
         "BGY",
         "LIN",
@@ -19465,6 +19485,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "MKC",
+      "preferredAirport": "MCI",
       "airports": [
         "MCI"
       ],
@@ -19708,6 +19729,7 @@
       "countryCode": "SE",
       "countryName": "Sweden",
       "iataCode": "MMA",
+      "preferredAirport": "MMX",
       "airports": [
         "MMX"
       ],
@@ -21306,6 +21328,7 @@
       "countryCode": "VN",
       "countryName": "Vietnam",
       "iataCode": "NHA",
+      "preferredAirport": "CXR",
       "airports": [
         "CXR"
       ],
@@ -21450,6 +21473,7 @@
       "countryCode": "ZA",
       "countryName": "South Africa",
       "iataCode": "NLP",
+      "preferredAirport": "MQP",
       "airports": [
         "MQP"
       ],
@@ -21681,6 +21705,7 @@
       "countryCode": "GB",
       "countryName": "United Kingdom",
       "iataCode": "NQT",
+      "preferredAirport": "EMA",
       "airports": [
         "EMA"
       ],
@@ -22005,6 +22030,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "NYC",
+      "preferredAirport": "JFK",
       "airports": [
         "EWR",
         "JFK",
@@ -22843,6 +22869,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "ORL",
+      "preferredAirport": "MCO",
       "airports": [
         "MCO",
         "SFB"
@@ -22882,6 +22909,7 @@
       "countryCode": "JP",
       "countryName": "Japan",
       "iataCode": "OSA",
+      "preferredAirport": "KIX",
       "airports": [
         "ITM",
         "KIX",
@@ -23263,6 +23291,7 @@
       "countryCode": "FR",
       "countryName": "France",
       "iataCode": "PAR",
+      "preferredAirport": "CDG",
       "airports": [
         "BVA",
         "CDG",
@@ -25363,6 +25392,7 @@
       "countryCode": "TR",
       "countryName": "Turkey",
       "iataCode": "QOR",
+      "preferredAirport": "OGU",
       "airports": [
         "OGU"
       ],
@@ -25735,6 +25765,7 @@
       "countryCode": "IS",
       "countryName": "Iceland",
       "iataCode": "REK",
+      "preferredAirport": "KEF",
       "airports": [
         "KEF",
         "RKV"
@@ -25991,6 +26022,7 @@
       "countryCode": "BR",
       "countryName": "Brazil",
       "iataCode": "RIO",
+      "preferredAirport": "GIG",
       "airports": [
         "GIG",
         "SDU"
@@ -26402,6 +26434,7 @@
       "countryCode": "IT",
       "countryName": "Italy",
       "iataCode": "ROM",
+      "preferredAirport": "FCO",
       "airports": [
         "CIA",
         "FCO"
@@ -26850,6 +26883,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "SAC",
+      "preferredAirport": "SMF",
       "airports": [
         "SCK",
         "SMF"
@@ -26940,6 +26974,7 @@
       "countryCode": "BR",
       "countryName": "Brazil",
       "iataCode": "SAO",
+      "preferredAirport": "GRU",
       "airports": [
         "CGH",
         "GRU",
@@ -27449,6 +27484,7 @@
       "countryCode": "KR",
       "countryName": "South Korea",
       "iataCode": "SEL",
+      "preferredAirport": "ICN",
       "airports": [
         "GMP",
         "ICN"
@@ -27839,6 +27875,7 @@
       "countryCode": "CN",
       "countryName": "China",
       "iataCode": "SIA",
+      "preferredAirport": "XIY",
       "airports": [
         "XIY"
       ],
@@ -28746,6 +28783,7 @@
       "countryCode": "JP",
       "countryName": "Japan",
       "iataCode": "SPK",
+      "preferredAirport": "CTS",
       "airports": [
         "CTS",
         "OKD"
@@ -29136,6 +29174,7 @@
       "countryCode": "SE",
       "countryName": "Sweden",
       "iataCode": "STO",
+      "preferredAirport": "ARN",
       "airports": [
         "ARN",
         "BMA",
@@ -30071,6 +30110,7 @@
       "countryCode": "ES",
       "countryName": "Spain",
       "iataCode": "TCI",
+      "preferredAirport": "TFS",
       "airports": [
         "TFN",
         "TFS"
@@ -32099,6 +32139,7 @@
       "countryCode": "JP",
       "countryName": "Japan",
       "iataCode": "TYO",
+      "preferredAirport": "HND",
       "airports": [
         "HND",
         "NRT"
@@ -34033,6 +34074,7 @@
       "countryCode": "US",
       "countryName": "United States",
       "iataCode": "WAS",
+      "preferredAirport": "IAD",
       "airports": [
         "DCA",
         "IAD"
@@ -35145,6 +35187,7 @@
       "countryCode": "CA",
       "countryName": "Canada",
       "iataCode": "YEA",
+      "preferredAirport": "YEG",
       "airports": [
         "YEG"
       ],
@@ -35471,6 +35514,7 @@
       "countryCode": "CA",
       "countryName": "Canada",
       "iataCode": "YMQ",
+      "preferredAirport": "YUL",
       "airports": [
         "YHU",
         "YMX",
@@ -35934,6 +35978,7 @@
       "countryCode": "CA",
       "countryName": "Canada",
       "iataCode": "YTO",
+      "preferredAirport": "YYZ",
       "airports": [
         "YHM",
         "YTZ",
