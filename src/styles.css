@@ -340,6 +340,12 @@ body{
   gap:8px;
 }
 
+@media(min-width:621px){
+  .scout-page:not([data-conversation-started="true"]) .scout-hero{
+    transform:translate(-50%,calc(-40% + 70px));
+  }
+}
+
 .scout-intro{
   width:100%;
   text-align:center;
