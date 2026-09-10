@@ -36,88 +36,24 @@ import {
   isPaymentSelected,
   selectBookingItinerary,
 } from "./components/scout/booking/booking-review-session";
-import bangkokBtsBackground from "../assets/2 Bangkok BTS.mp4";
-import hongKongBackground from "../assets/2 Hong Kong.mp4";
-import kyotoBackground from "../assets/2 Kyoto.mp4";
-import seoulBackground from "../assets/2 Seoul.mp4";
 import "./styles.css";
 
-const BACKGROUND_VIDEOS = [
-  bangkokBtsBackground,
-  hongKongBackground,
-  kyotoBackground,
-  seoulBackground,
-];
-const BACKGROUND_VIDEO_START_OFFSETS = [1.75, 0, 0, 0];
-const BACKGROUND_DISPLAY_MS = 5_000;
+const DESTINATION_BACKGROUND_VIDEO =
+  "/assets/Destination%20Videos/scout-destinations-preview-v2.mp4";
 const MOBILE_THREAD_BOTTOM_THRESHOLD = 48;
 
 function RotatingBackground() {
-  const videoRefs = useRef([]);
-  const [visibleLayer, setVisibleLayer] = useState(0);
-  const [layerIndexes, setLayerIndexes] = useState([0, 1]);
-  const [pendingLayer, setPendingLayer] = useState(null);
-
-  const applyStartOffset = (layer) => {
-    const video = videoRefs.current[layer];
-    const startOffset = BACKGROUND_VIDEO_START_OFFSETS[layerIndexes[layer]];
-
-    if (video && startOffset > 0) {
-      video.currentTime = startOffset;
-    }
-  };
-
-  const showPendingLayer = () => {
-    if (pendingLayer === null) return;
-
-    const video = videoRefs.current[pendingLayer];
-    if (!video || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
-
-    video.currentTime = BACKGROUND_VIDEO_START_OFFSETS[layerIndexes[pendingLayer]];
-    video.play().catch(() => {});
-    setVisibleLayer(pendingLayer);
-    setPendingLayer(null);
-  };
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const nextLayer = visibleLayer === 0 ? 1 : 0;
-      const nextIndex = (layerIndexes[visibleLayer] + 1) % BACKGROUND_VIDEOS.length;
-
-      setLayerIndexes((current) =>
-        current.map((index, layer) => (layer === nextLayer ? nextIndex : index)),
-      );
-      setPendingLayer(nextLayer);
-    }, BACKGROUND_DISPLAY_MS);
-
-    return () => window.clearTimeout(timer);
-  }, [layerIndexes, visibleLayer]);
-
-  useEffect(() => {
-    showPendingLayer();
-  }, [layerIndexes, pendingLayer]);
-
   return (
-    <>
-      {[0, 1].map((layer) => (
-        <video
-          key={layer}
-          ref={(element) => {
-            videoRefs.current[layer] = element;
-          }}
-          className={`scout-bg-video${visibleLayer === layer ? " is-visible" : ""}`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          src={BACKGROUND_VIDEOS[layerIndexes[layer]]}
-          aria-hidden="true"
-          onLoadedMetadata={() => applyStartOffset(layer)}
-          onCanPlay={showPendingLayer}
-        />
-      ))}
-    </>
+    <video
+      className="scout-bg-video is-visible"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      src={DESTINATION_BACKGROUND_VIDEO}
+      aria-hidden="true"
+    />
   );
 }
 
